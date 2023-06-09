@@ -1,6 +1,6 @@
 public class LoginController {
     //@NotEmpty
-    private String userName;
+    private String usuario;
     //@NotEmpty
     private String contrasenia;
 
