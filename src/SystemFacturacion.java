@@ -5,6 +5,7 @@ public class SystemFacturacion {
     Queue<Factura> facturasDiarias=new LinkedList<>();
     public void addFactura(Factura factura){
         facturas.add(factura);
+        OrdenarFacturasxFecha();
     }
     public void addFacturaDiaria(Factura factura){
         facturasDiarias.add(factura);
@@ -18,18 +19,18 @@ public class SystemFacturacion {
     public void modificarDescripcionFactura(Factura factura_Modificar_Descripcion,String descripcionaModficar){
         factura_Modificar_Descripcion.setDescripcion(descripcionaModficar);
     }
-    public void modificarDescripcionValorPagar(Factura factura_Modificar_ValorPagar,double valorPagaraModficar){
+    public void modificarValorPagar(Factura factura_Modificar_ValorPagar,double valorPagaraModficar){
         factura_Modificar_ValorPagar.setValorTotalPagar(valorPagaraModficar);
     }
-    public String saberFormaPado(Factura facturaSaberFormaPago){
+    public String saberFormaPado(int formaPagoInt){
         String formaPago=null;
-        if (facturaSaberFormaPago.getFormaDePagoFactura()==1){
+        if (formaPagoInt==1){
             formaPago="Tarjeta";
         }
-        if (facturaSaberFormaPago.getFormaDePagoFactura()==2){
+        if (formaPagoInt==2){
             formaPago="Efectivo";
         }
-        if (facturaSaberFormaPago.getFormaDePagoFactura()==3){
+        if (formaPagoInt==3){
             formaPago="Transferencia";
         }
         return formaPago;
@@ -49,4 +50,33 @@ public class SystemFacturacion {
             }
         }
     }
+    public  Paciente searchBinary(List<Paciente> listaBuscarPorTrackingBinario, String targetTrackingCorreo) {
+        int izquierda=0, derecha= listaBuscarPorTrackingBinario.size() -1;
+        while (izquierda<=derecha){
+            int numMedio=(derecha+izquierda)/2;
+            if(targetTrackingCorreo.equals(listaBuscarPorTrackingBinario.get(numMedio).getCorreo())){
+                return listaBuscarPorTrackingBinario.get(numMedio);
+            }else if(listaBuscarPorTrackingBinario.get(numMedio).getCorreo().compareTo(targetTrackingCorreo) < 0){
+                izquierda=numMedio+1;
+            }else{
+                derecha=numMedio-1;
+            }
+        }
+        return null;
+    }
+    public  Factura searchBinaryFactura(List<Factura> listaBuscarPorTrackingBinario, String targetTrackingCorreo) {
+        int izquierda=0, derecha= listaBuscarPorTrackingBinario.size() -1;
+        while (izquierda<=derecha){
+            int numMedio=(derecha+izquierda)/2;
+            if(targetTrackingCorreo.equals(listaBuscarPorTrackingBinario.get(numMedio).getPacienteFactura().getCorreo())){
+                return listaBuscarPorTrackingBinario.get(numMedio);
+            }else if(listaBuscarPorTrackingBinario.get(numMedio).getPacienteFactura().getCorreo().compareTo(targetTrackingCorreo) < 0){
+                izquierda=numMedio+1;
+            }else{
+                derecha=numMedio-1;
+            }
+        }
+        return null;
+    }
+
 }

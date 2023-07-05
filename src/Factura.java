@@ -7,7 +7,7 @@ public class Factura {
     String descripcion;
     double valorTotalPagar;
     int formaDePagoFactura;
-    LocalDate fechaDiaActual=LocalDate.now();
+    LocalDate fechaDiaActual;
 
    /* formaDePago formaDePagoFactura;
     enum formaDePago{
@@ -69,4 +69,15 @@ public class Factura {
         return fechaDiaActual;
     }
 
+    @Override
+    public String toString() {
+        return "\nFactura{" +
+                "\npacienteFactura=" + pacienteFactura +
+                "\n, cantidadTerapias=" + cantidadTerapias +
+                "\n, descripcion='" + descripcion + '\'' +
+                "\n, valorTotalPagar=" + valorTotalPagar +
+                "\n, formaDePagoFactura=" + formaDePagoFactura +
+                "\n, fechaDiaActual=" + fechaDiaActual +
+                '}';
+    }
 }

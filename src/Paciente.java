@@ -1,16 +1,74 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Paciente extends Persona {
+public class Paciente  implements Cloneable {
 
     private Persona personaPaciente;
     private int prioridadPaciente;
-    private String observacionesAdicionales;
-    private String seguroMedico;
+    private boolean seguroMedico;
+    private String correo;
+    private String userPassword;
 
-    public Paciente(String nombre, String apellido, String cedula, String genero, int diaNacimiento, int mesNacimiento, int anioNacimiento, String correo, String userPassword, Persona personaPaciente, int prioridadPaciente) {
-        super(nombre, apellido, cedula, genero, diaNacimiento, mesNacimiento, anioNacimiento, correo, userPassword);
+    public Paciente(Persona personaPaciente, int prioridadPaciente, boolean seguroMedico, String correo, String userPassword) {
         this.personaPaciente = personaPaciente;
         this.prioridadPaciente = prioridadPaciente;
+        this.seguroMedico = seguroMedico;
+        this.correo = correo;
+        this.userPassword = userPassword;
+    }
+
+    public Persona getPersonaPaciente() {
+        return personaPaciente;
+    }
+
+    public void setPersonaPaciente(Persona personaPaciente) {
+        this.personaPaciente = personaPaciente;
+    }
+
+    public int getPrioridadPaciente() {
+        return prioridadPaciente;
+    }
+
+    public void setPrioridadPaciente(int prioridadPaciente) {
+        this.prioridadPaciente = prioridadPaciente;
+    }
+
+    public boolean isSeguroMedico() {
+        return seguroMedico;
+    }
+
+    public void setSeguroMedico(boolean seguroMedico) {
+        this.seguroMedico = seguroMedico;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+    public Paciente deepClone() throws CloneNotSupportedException{
+        Paciente clone=(Paciente) super.clone();
+        return clone;
+    }
+
+    @Override
+    public String toString() {
+        return "Paciente{" +
+                "\npersonaPaciente=" + personaPaciente +
+                "\n, prioridadPaciente=" + prioridadPaciente +
+                "\n, seguroMedico=" + seguroMedico +
+                "\n, correo='" + correo + '\'' +
+                "\n, userPassword='" + userPassword + '\'' +
+                '}';
     }
 }
