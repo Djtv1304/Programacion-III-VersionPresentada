@@ -40,14 +40,43 @@ public class InterfazProyectoFinal extends JFrame{
     private JTextArea textArea1;
     private JTextField textField8;
     private JButton busquedaBinariaButton;
+    private JTabbedPane tabbedPane4;
+    private JButton buscarButton;
+    private JTextField textField9;
+    private JComboBox comboBox4;
+    private JTextField textField10;
+    private JButton crearFichaDeProgresoButton;
+    private JCheckBox enInicioCheckBox;
+    private JCheckBox enProgresoCheckBox;
+    private JCheckBox completadoCheckBox;
+    private JTextField textField11;
+    private JTextField textField12;
+    private JTextField textField13;
+    private JComboBox comboBox5;
+    private JButton CONFIRMARESTADOTRATAMIENTOButton;
+    private JButton CAMBIARTRATAMIENTOButton;
+    private JTextField textField14;
+    private JButton buscarButton1;
+    private JTextArea textArea2;
     List<Paciente> pacientes=new ArrayList<>();
+    List<Doctor> doctores=new ArrayList<>();
     List<Paciente> arregloBurbuja=new ArrayList<>();
-    List<Paciente> arregloInsercion=new ArrayList<>();
+    List<Doctor> arregloBurbujaDoctores=new ArrayList<>();
+    List<Grafo> grafos=new ArrayList<>();
+    //List<Paciente> arregloInsercion=new ArrayList<>();
+
+    public List<Grafo> getGrafos() {
+        return grafos;
+    }
 
     LocalDate fechaDiaActual=LocalDate.now();
     Factura facturaNew;
 
     SystemFacturacion facturacionSystemNew =new SystemFacturacion();
+    Grafo grafoNew;
+    Vertice verticeNew;
+    Tratamiento tratamiento;
+    int contador=0;
 
     public InterfazProyectoFinal() {
     add(panelPrincipal);
@@ -61,12 +90,18 @@ public class InterfazProyectoFinal extends JFrame{
     Persona personaD=new Persona("Anuel","Cuccitini","1727373688","Masculino",11,02,2003);
     Persona personaE=new Persona("Zaramay","Messi","1711007086","Masculino",18,01,2001);
     Persona personaF=new Persona("Duki","Aveiro","1899105286","Masculino",26,12,1991);
+    Persona dotorA=new Persona("Dr","House","1899105286","Masculino",26,12,1991);
+    Persona dotorB=new Persona("Dr","Malito","1899105286","Masculino",26,12,1991);
+    Persona dotorC=new Persona("Dr","Saul","1899105286","Masculino",26,12,1991);
     Paciente pacienteA=new Paciente(personaA,3,true,"Juan@gmial.com","nose");
     Paciente pacienteB=new Paciente(personaB,2,true,"Lionel@gmial.com","nose");
     Paciente pacienteC=new Paciente(personaC,2,false,"Cr7@gmial.com","nose");
     Paciente pacienteD=new Paciente(personaD,3,true,"Juan@gmial.com","nose");
     Paciente pacienteE=new Paciente(personaE,1,true,"Lionel@gmial.com","nose");
     Paciente pacienteF=new Paciente(personaF,1,false,"Cr7@gmial.com","nose");
+    Doctor doctorA=new Doctor("Tren Sup",dotorA);
+    Doctor doctorB=new Doctor("Core",dotorB);
+    Doctor doctorC=new Doctor("Tren Inf",dotorC);
 
     buttonCrearFactura.addActionListener(new ActionListener() {
 
@@ -99,6 +134,11 @@ public class InterfazProyectoFinal extends JFrame{
                 pacientes.add(pacienteD);
                 pacientes.add(pacienteE);
                 pacientes.add(pacienteF);
+                doctores.add(doctorA);
+                doctores.add(doctorB);
+                doctores.add(doctorC);
+                llenarArrgeloEquipo(doctores,comboBox4);
+
             }
         });
         buttonBuscar.addActionListener(new ActionListener() {
@@ -147,15 +187,15 @@ public class InterfazProyectoFinal extends JFrame{
                 if (comboBox3.getSelectedItem().toString().equalsIgnoreCase("Nombre")) {
                     BurbujaxNombre();
                     textArea1.setText("");
-                    for (int i = 0; i < getArregloBurbuja().size(); i++) {
-                        textArea1.append(getArregloBurbuja().get(i).getPersonaPaciente().getNombre() + "\n");
+                    for (int i = 0; i < getPacientes().size(); i++) {
+                        textArea1.append(getPacientes().get(i).getPersonaPaciente().getNombre() + "\n");
                     }
                 }
                 if (comboBox3.getSelectedItem().toString().equalsIgnoreCase("Prioridad")) {
                     BurbujaxPrioridad();
                     textArea1.setText("");
-                    for (int i = 0; i < getArregloBurbujaxPrioridad().size(); i++) {
-                        textArea1.append(getArregloBurbujaxPrioridad().get(i).getPersonaPaciente().getNombre() + "\n");
+                    for (int i = 0; i < getPacientesPorPrioridad().size(); i++) {
+                        textArea1.append(getPacientesPorPrioridad().get(i).getPersonaPaciente().getNombre() + "\n");
                     }
                 }
             }
@@ -163,7 +203,109 @@ public class InterfazProyectoFinal extends JFrame{
         busquedaBinariaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textArea1.setText(searchBinary(getArregloBurbuja(),textField8.getText()).getPersonaPaciente().getNombre());
+                if (comboBox3.getSelectedItem().toString().equalsIgnoreCase("Nombre")) {
+                    BurbujaxNombre();
+                    textArea1.setText("");
+                    textArea1.setText(searchBinary(getPacientes(),textField8.getText()).getPersonaPaciente().getNombre());
+                }
+                if (comboBox3.getSelectedItem().toString().equalsIgnoreCase("Prioridad")) {
+                    BurbujaxPrioridad();
+                    textArea1.setText("");
+                    textArea1.setText("La prioridad del paciente buscado es "+searchBinaryPrioridad(getPacientes(),scarPrioridad(getPacientesPorPrioridad(), textField8.getText())).getPrioridadPaciente());
+                }
+
+
+            }
+        });
+        buscarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BurbujaxNombre();
+                if (searchBinary(getPacientes(),textField9.getText()) != null){
+                    JOptionPane.showMessageDialog(null,"Se encontro al Paciente "+searchBinary(getPacientes(),textField9.getText()).getPersonaPaciente().getNombre());
+                    Grafo grafoSencillo=new Grafo(false,false);
+                    grafoNew=grafoSencillo;
+
+                }else{
+                    JOptionPane.showMessageDialog(null,"No se encontro al Paciente ");
+                }
+
+            }
+        });
+        crearFichaDeProgresoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BurbujaxNombreDoctores();
+                BurbujaxNombre();
+                if (enInicioCheckBox.isSelected()) {
+                    //tratamiento = new Tratamiento(contador, searchBinaryDoctores(getArregloBurbujaDoctores(),comboBox4.getSelectedItem().toString()),searchBinary(getArregloBurbuja(), textField9.getText()), textField10.getText(),"En Inicio");
+                    tratamiento = new Tratamiento(contador,textField10.getText(),"En Inicio");
+                } else if (enProgresoCheckBox.isSelected()) {
+                    //tratamiento = new Tratamiento(contador, searchBinaryDoctores(getArregloBurbujaDoctores(),comboBox4.getSelectedItem().toString()),searchBinary(getArregloBurbuja(), textField9.getText()), textField10.getText(),"En Progreso");
+                    tratamiento = new Tratamiento(contador,textField10.getText(),"En Progreso");
+                }else if (completadoCheckBox.isSelected()) {
+                    //tratamiento = new Tratamiento(contador, searchBinaryDoctores(getArregloBurbujaDoctores(),comboBox4.getSelectedItem().toString()),searchBinary(getArregloBurbuja(), textField9.getText()), textField10.getText(),"Completado");
+                    tratamiento = new Tratamiento(contador,textField10.getText(),"Completado");
+                }else{
+                    JOptionPane.showMessageDialog(null,"Seleccione uno porfavor");
+                }
+                BurbujaxNombre();
+                Vertice verticeNuevoPaciente=new Vertice(searchBinary(getPacientes(),textField9.getText()));
+                verticeNew=verticeNuevoPaciente;
+                grafoNew.addVertice(verticeNew.getData());
+                BurbujaxNombreDoctores();
+                Vertice verticeNuevoDoctores=new Vertice(searchBinaryDoctores(getArregloBurbujaDoctores(),comboBox4.getSelectedItem().toString()));
+                verticeNew=verticeNuevoDoctores;
+                grafoNew.addVerticeDoctor(verticeNew.getDataD());
+                Vertice verticeNuevoTratamiento =new Vertice(tratamiento);
+                verticeNew=verticeNuevoTratamiento;
+                grafoNew.addVerticeDoctorTratamiento(verticeNew.getDataT());
+                Vertice verticeNuevoResultado =new Vertice("");
+                verticeNew=verticeNuevoResultado;
+                grafoNew.addVerticeDoctorResultado(verticeNew.getResultado());
+
+
+                grafoNew.addEdge(verticeNuevoPaciente,verticeNuevoDoctores,1);
+                grafoNew.addEdge(verticeNuevoPaciente,verticeNuevoTratamiento,1);
+                grafoNew.addEdge(verticeNuevoPaciente,verticeNuevoResultado,1);
+
+                grafos.add(grafoNew);
+                contador++;
+            }
+        });
+        CONFIRMARESTADOTRATAMIENTOButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (comboBox5.getSelectedItem().toString().equalsIgnoreCase("No muestra Avace")){
+                    grafoNew.getVertexByValuePaciente(textField11.getText()).setResultado("No muestra Avace");
+                }if(comboBox5.getSelectedItem().toString().equalsIgnoreCase("Muestra Avance")){
+                    grafoNew.getVertexByValuePaciente(textField11.getText()).setResultado("Muestra Avance");
+                }if(comboBox5.getSelectedItem().toString().equalsIgnoreCase("Muestra Gran Avance")){
+                    grafoNew.getVertexByValuePaciente(textField11.getText()).setResultado("Muestra Gran Avance");
+                }else{
+                    JOptionPane.showMessageDialog(null,"Seleccione un resultado");
+                }
+            }
+        });
+        buscarButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /*if (buscarGrafoPorPaciente(grafos,textField14.getText())!=null){
+                    ArrayList<Vertice> visitedVeritce=buscarGrafoPorPaciente(grafos,textField14.getText()).depthFirstSearch(grafoNew.getVertexByValuePaciente(textField14.getText()));
+                    textArea2.setText(" ");
+                    for (Vertice recorrerVertice:visitedVeritce){
+                        textArea2.append("\n"+recorrerVertice.getData());
+                        textArea2.append("\n"+recorrerVertice.getDataD());
+                        textArea2.append("\n"+recorrerVertice.getDataT());
+
+                    }
+
+                }*/
+                if (buscarGrafoPorPaciente(grafos,textField14.getText())!=null) {
+                    for (Vertice recorrerVertice : buscarGrafoPorPaciente(grafos,textField14.getText()).getVertices()) {
+                        textArea2.append("\n" + recorrerVertice.print(grafoNew.isWeighted()));
+                    }
+                }
 
             }
         });
@@ -204,52 +346,58 @@ public class InterfazProyectoFinal extends JFrame{
     }
 
     public void BurbujaxNombre(){
-        arregloBurbuja = new ArrayList<>();
-        for (Paciente packagesRetornar:pacientes){
-            try {
-                Paciente packageAux=packagesRetornar.deepClone();
-                arregloBurbuja.add(packageAux);
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        int n = arregloBurbuja.size();
+        int n = pacientes.size();
         for (int i = 0; i < n-1; i++) {
             for (int j = 0; j < n-i-1; j++) {
-                if (arregloBurbuja.get(j).getPersonaPaciente().getNombre().compareTo(arregloBurbuja.get(j+1).getPersonaPaciente().getNombre()) >0 ) {
-                    Paciente temp = arregloBurbuja.get(j);
-                    arregloBurbuja.set(j,arregloBurbuja.get(j+1)) ;
-                    arregloBurbuja.set(j+1,temp);
+                if (pacientes.get(j).getPersonaPaciente().getNombre().compareTo(pacientes.get(j+1).getPersonaPaciente().getNombre()) >0 ) {
+                    Paciente temp = pacientes.get(j);
+                    pacientes.set(j,pacientes.get(j+1)) ;
+                    pacientes.set(j+1,temp);
                 }
             }
         }
     }
-    public List<Paciente> getArregloBurbuja() {
-        return arregloBurbuja;
+    public int scarPrioridad(List<Paciente> listapacientes, String nombre){
+        for (Paciente aux: listapacientes){
+            if (aux.getPersonaPaciente().getNombre().equalsIgnoreCase(nombre)){
+                return aux.getPrioridadPaciente();
+            }
+        }
+        return 0;
+    }
+
+    public void BurbujaxNombreDoctores(){
+        int n = doctores.size();
+        for (int i = 0; i < n-1; i++) {
+            for (int j = 0; j < n-i-1; j++) {
+                if (doctores.get(j).getPersonaDoctor().getApellido().compareTo(doctores.get(j+1).getPersonaDoctor().getApellido()) >0 ) {
+                    Doctor temp = doctores.get(j);
+                    doctores.set(j,doctores.get(j+1)) ;
+                    doctores.set(j+1,temp);
+                }
+            }
+        }
+    }
+    public List<Paciente> getPacientes() {
+        return pacientes;
+    }
+    public List<Doctor> getArregloBurbujaDoctores() {
+        return doctores;
     }
     public void BurbujaxPrioridad(){
-        arregloBurbuja = new ArrayList<>();
-        for (Paciente packagesRetornar:pacientes){
-            try {
-                Paciente packageAux=packagesRetornar.deepClone();
-                arregloBurbuja.add(packageAux);
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        int n = arregloBurbuja.size();
+        int n = pacientes.size();
         for (int i = 0; i < n-1; i++) {
             for (int j = 0; j < n-i-1; j++) {
-                if (arregloBurbuja.get(j).getPrioridadPaciente()> arregloBurbuja.get(j+1).getPrioridadPaciente()) {
-                    Paciente temp = arregloBurbuja.get(j);
-                    arregloBurbuja.set(j,arregloBurbuja.get(j+1)) ;
-                    arregloBurbuja.set(j+1,temp);
+                if (pacientes.get(j).getPrioridadPaciente()> pacientes.get(j+1).getPrioridadPaciente()) {
+                    Paciente temp = pacientes.get(j);
+                    pacientes.set(j,pacientes.get(j+1)) ;
+                    pacientes.set(j+1,temp);
                 }
             }
         }
     }
-    public List<Paciente> getArregloBurbujaxPrioridad() {
-        return arregloBurbuja;
+    public List<Paciente> getPacientesPorPrioridad() {
+        return pacientes;
     }
 
     public  Paciente searchBinary(List<Paciente> listaBuscarPorTrackingBinario, String targetTrackingNameT) {
@@ -266,5 +414,50 @@ public class InterfazProyectoFinal extends JFrame{
         }
         return null;
     }
+
+    public  Paciente searchBinaryPrioridad(List<Paciente> listaBuscarPorTrackingBinario, int targetTrackingNameT) {
+        int izquierda=0, derecha= listaBuscarPorTrackingBinario.size() -1;
+        while (izquierda<=derecha){
+            int numMedio=(derecha+izquierda)/2;
+            if(targetTrackingNameT ==  listaBuscarPorTrackingBinario.get(numMedio).getPrioridadPaciente()){
+                return listaBuscarPorTrackingBinario.get(numMedio);
+            }else if((listaBuscarPorTrackingBinario.get(numMedio).getPrioridadPaciente())<targetTrackingNameT){
+                izquierda=numMedio+1;
+            }else{
+                derecha=numMedio-1;
+            }
+        }
+        return null;
+    }
+
+    public  Doctor searchBinaryDoctores(List<Doctor> listaBuscarPorTrackingBinario, String targetTrackingNameT) {
+        int izquierda=0, derecha= listaBuscarPorTrackingBinario.size() -1;
+        while (izquierda<=derecha){
+            int numMedio=(derecha+izquierda)/2;
+            if(targetTrackingNameT.equals(listaBuscarPorTrackingBinario.get(numMedio).getPersonaDoctor().getApellido())){
+                return listaBuscarPorTrackingBinario.get(numMedio);
+            }else if(listaBuscarPorTrackingBinario.get(numMedio).getPersonaDoctor().getApellido().compareTo(targetTrackingNameT) < 0){
+                izquierda=numMedio+1;
+            }else{
+                derecha=numMedio-1;
+            }
+        }
+        return null;
+    }
+    private void llenarArrgeloEquipo(List<Doctor> listaRecorrer,JComboBox comboBoxSetear){
+        for (Doctor doctresRecorrer:listaRecorrer){
+            comboBoxSetear.addItem(doctresRecorrer.getPersonaDoctor().getApellido());
+        }
+
+    }
+    public Grafo buscarGrafoPorPaciente(List<Grafo> grafosRecorrer,String nombrePaciente){
+        for (Grafo grafoAux:grafosRecorrer){
+            if (grafoAux.getVertexByValuePaciente(nombrePaciente)!=null){
+                return grafoAux;
+            }
+        }
+        return null;
+    }
+
 
 }
