@@ -6,6 +6,24 @@ public class Persona {
     private int diaNacimiento;
     private int mesNacimiento;
     private int anioNacimiento;
+    private String username;
+    private String password;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public enum tipoDePersona {
 
@@ -18,7 +36,7 @@ public class Persona {
     public Persona() {
     }
 
-    public Persona(String nombre, String apellido, String cedula, String genero, int diaNacimiento, int mesNacimiento, int anioNacimiento) {
+    public Persona(String nombre, String apellido, String cedula, String genero, int diaNacimiento, int mesNacimiento, int anioNacimiento/*, String username, String password*/) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -26,6 +44,8 @@ public class Persona {
         this.diaNacimiento = diaNacimiento;
         this.mesNacimiento = mesNacimiento;
         this.anioNacimiento = anioNacimiento;
+        this.username = "H7djtv";
+        this.password = "f1e3l0i4pe";
     }
 
     public String getNombre() {

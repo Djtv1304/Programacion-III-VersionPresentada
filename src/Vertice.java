@@ -50,12 +50,6 @@ public class Vertice {
         return dataD;
     }
 
-    public Vertice getVertex(String data){
-        if (this.data.equals(data)){
-            return this;
-        }
-        return null;
-    }
     public ArrayList<Edge> getEdges(){
         return this.edges;
     }
