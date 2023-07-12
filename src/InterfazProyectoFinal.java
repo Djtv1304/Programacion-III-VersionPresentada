@@ -59,7 +59,7 @@ public class InterfazProyectoFinal extends JFrame{
     private JTextField textFieldDiaN;
     private JTextField textFieldMesN;
     private JTextField textFieldAnioN;
-    private JPasswordField passwordFieldPassword;
+    private JPasswordField passwordField;
     private JTextField textFieldUsername;
     private JComboBox comboBoxGenero;
     private JTextField textFieldCedula;
@@ -73,7 +73,7 @@ public class InterfazProyectoFinal extends JFrame{
     private JPanel JPanelCuenta;
     private JPanel JPanelOrdenamiento;
     private JPanel JPanelProgreso;
-    private JPanel JPanelRegistro;
+    private JPanel JPanelPacientes;
     private JTextField textFieldEliminarCuenta;
     private JButton clickAquiParaEliminarButton;
     private JTabbedPane tabbedPane5;
@@ -81,7 +81,7 @@ public class InterfazProyectoFinal extends JFrame{
     private JComboBox comboBoxPrioridadPaciente;
     private JTextArea textArea3;
     private JButton mostrarCitasAgendadasDeButton;
-    private JTabbedPane tabbedPane7;
+    private JTabbedPane tabbedPanePacientes;
     private JTextField textFieldEliminarPaciente;
     private JButton eliminarPacienteButton;
     private JComboBox comboBoxSeguroMedico;
@@ -121,6 +121,7 @@ public class InterfazProyectoFinal extends JFrame{
     private JTextField nuevoUsernameFisio;
     private JPasswordField nuevaPasswordFisio;
     private JButton modificarFisioButton;
+    private JButton cerrarSesionButton;
     private List<Paciente> pacientes=new ArrayList<>();
     private List<Doctor> doctores=new ArrayList<>();
     private LoginController loginController = new LoginController();
@@ -138,10 +139,8 @@ public class InterfazProyectoFinal extends JFrame{
 
     public InterfazProyectoFinal() {
 
-    tabbedPane1.setEnabledAt(1,false);
-    tabbedPane1.setEnabledAt(2,false);
-    tabbedPane1.setEnabledAt(3,false);
-    tabbedPane1.setEnabledAt(4,false);
+    cerrarSesion();
+    cerrarSesionButton.setVisible(false);
 
     Persona ADMIN = new Persona();
     ADMIN.setUsername("admin");
@@ -150,15 +149,15 @@ public class InterfazProyectoFinal extends JFrame{
     loginController.register(ADMIN);
 
     setTitle("GUI Proyecto2");
-    Persona personaA=new Persona("Juan","Cuccitini","1727373688","Masculino",11,02,2003);
-    Persona personaB=new Persona("Lionel","Messi","1711007086","Masculino",18,01,2001);
-    Persona personaC=new Persona("Cristiano","Aveiro","1899105286","Masculino",26,12,1991);
-    Persona personaD=new Persona("Anuel","Cuccitini","1727373688","Masculino",11,02,2003);
-    Persona personaE=new Persona("Zaramay","Messi","1711007086","Masculino",18,01,2001);
-    Persona personaF=new Persona("Duki","Aveiro","1899105286","Masculino",26,12,1991);
-    Persona dotorA=new Persona("Dr","House","1899105286","Masculino",26,12,1991);
-    Persona dotorB=new Persona("Dr","Malito","1899105286","Masculino",26,12,1991);
-    Persona dotorC=new Persona("Dr","Saul","1899105286","Masculino",26,12,1991);
+    Persona personaA=new Persona("Juan","Cuccitini","1727373688","Masculino",11,02,2003,"123","123");
+    Persona personaB=new Persona("Lionel","Messi","1711007086","Masculino",18,01,2001,"123","123");
+    Persona personaC=new Persona("Cristiano","Aveiro","1899105286","Masculino",26,12,1991,"123","123");
+    Persona personaD=new Persona("Anuel","Cuccitini","1727373688","Masculino",11,02,2003,"123","123");
+    Persona personaE=new Persona("Zaramay","Messi","1711007086","Masculino",18,01,2001,"123","123");
+    Persona personaF=new Persona("Duki","Aveiro","1899105286","Masculino",26,12,1991,"123","123");
+    Persona dotorA=new Persona("Dr","House","1899105286","Masculino",26,12,1991,"123","123");
+    Persona dotorB=new Persona("Dr","Malito","1899105286","Masculino",26,12,1991,"123","123");
+    Persona dotorC=new Persona("Dr","Saul","1899105286","Masculino",26,12,1991,"123","123");
     Paciente pacienteA=new Paciente(personaA,3,true,"Juan@gmial.com","nose");
     Paciente pacienteB=new Paciente(personaB,2,true,"Lionel@gmial.com","nose");
     Paciente pacienteC=new Paciente(personaC,2,false,"Cr7@gmial.com","nose");
@@ -389,42 +388,52 @@ public class InterfazProyectoFinal extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                int dia = Integer.parseInt(textFieldDiaN.getText());
+                int mes = Integer.parseInt(textFieldMesN.getText());
+
+
                 try {
-                    // Creo la nueva persona
-                    Persona PersonaNueva = new Persona(
-                            textFieldNombre.getText(),
-                            textFieldApellido.getText(),
-                            textFieldCedula.getText(),
-                            comboBoxGenero.getSelectedItem().toString(),
-                            Integer.parseInt(textFieldDiaN.getText()),
-                            Integer.parseInt(textFieldMesN.getText()),
-                            Integer.parseInt(textFieldAnioN.getText())
-                    );
 
-                    int prioridadPaciente;
-                    boolean seguroMedico;
+                    if ( dia <= 31 && mes <= 12 ) {
+                        // Creo la nueva persona
+                        Persona PersonaNueva = new Persona(
+                                textFieldNombre.getText(),
+                                textFieldApellido.getText(),
+                                textFieldCedula.getText(),
+                                comboBoxGenero.getSelectedItem().toString(),
+                                dia,
+                                mes,
+                                Integer.parseInt(textFieldAnioN.getText()),
+                                textFieldUsername.getText(),
+                                passwordField.getText()
+                        );
 
-                    if (comboBoxPrioridadPaciente.getSelectedIndex() != 0 || comboBoxSeguroMedico.getSelectedIndex() != 0) {
-                        if (comboBoxPrioridadPaciente.getSelectedIndex() == 1) {
-                            prioridadPaciente = 1; // 1 significa que es estándar
+                        int prioridadPaciente;
+                        boolean seguroMedico;
+
+                        if (comboBoxPrioridadPaciente.getSelectedIndex() != 0 || comboBoxSeguroMedico.getSelectedIndex() != 0) {
+                            if (comboBoxPrioridadPaciente.getSelectedIndex() == 1) {
+                                prioridadPaciente = 1; // 1 significa que es estándar
+                            } else {
+                                prioridadPaciente = 2; // 2 Significa que es prioritario
+                            }
+
+                            if (comboBoxSeguroMedico.getSelectedIndex() == 1) {
+                                seguroMedico = true;
+                            } else {
+                                seguroMedico = false;
+                            }
+                            Paciente PacienteNuevo = new Paciente(PersonaNueva, prioridadPaciente, seguroMedico, PersonaNueva.getUsername(), PersonaNueva.getPassword());
+                            pacientes.add(PacienteNuevo);
+                            // Agrego el username y password al HashMap invocando al metodo register
+                            loginController.register(PersonaNueva);
+                            JOptionPane.showMessageDialog(null, "Felicidades, se ha registrado correctamente!");
                         } else {
-                            prioridadPaciente = 2; // 2 Significa que es prioritario
+                            JOptionPane.showMessageDialog(null, "Seleccione una opción válida!");
                         }
-
-                        if (comboBoxSeguroMedico.getSelectedIndex() == 1) {
-                            seguroMedico = true;
-                        } else {
-                            seguroMedico = false;
-                        }
-                        Paciente PacienteNuevo = new Paciente(PersonaNueva,prioridadPaciente,seguroMedico, PersonaNueva.getUsername(), PersonaNueva.getPassword());
-                        pacientes.add(PacienteNuevo);
-                        // Agrego el username y password al HashMap invocando al metodo register
-                        loginController.register(PersonaNueva);
-                        JOptionPane.showMessageDialog(null,"Felicidades, se ha registrado correctamente!");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Seleccione una opción válida!");
+                        JOptionPane.showMessageDialog(null,"Ingrese fechas válidas!");
                     }
-
                 } catch (Exception x) {
                     JOptionPane.showMessageDialog(null, "Hay un error al registrar la persona, verifique los datos!");
                 }
@@ -441,11 +450,17 @@ public class InterfazProyectoFinal extends JFrame{
                         tabbedPane1.setEnabledAt(2, true);
                         tabbedPane1.setEnabledAt(3, true);
                         tabbedPane1.setEnabledAt(4, true);
+                        tabbedPane1.setEnabledAt(8,true);
+                        tabbedPanePacientes.setEnabledAt(1,true);
+                        tabbedPanePacientes.setEnabledAt(2,true);
 
                         if (textFieldUsernameLogin.getText().equals("admin") && passwordFieldLogin.getText().equals("admin")) {
-                            // ACTIVAR EL PANEL PARA FISIOTERAPEUTAS
+                            tabbedPane1.setEnabledAt(6,true);
+                            tabbedPane1.setEnabledAt(7,true);
                         }
 
+                        cerrarSesionButton.setVisible(true);
+                        iniciarSesionButton.setVisible(false);
                     } else {
 
                         JOptionPane.showMessageDialog(null, "Credenciales incorrectas, intente nuevamente!");
@@ -465,6 +480,7 @@ public class InterfazProyectoFinal extends JFrame{
                 Paciente pacienteEncontrado = searchBinary(getPacientes(), textFieldEliminarPaciente.getText());
                 if ( pacienteEncontrado != null){
                     JOptionPane.showMessageDialog(null,"Se encontró al Paciente "+pacienteEncontrado.getPersonaPaciente().getNombre() + ", el paciente será eliminado!");
+                    loginController.getUsers().remove(pacienteEncontrado.getPersonaPaciente().getUsername());
                     pacientes.remove(pacienteEncontrado); // Remuevo el paciente de la lista
 
                 }else{
@@ -499,6 +515,7 @@ public class InterfazProyectoFinal extends JFrame{
 
                             JOptionPane.showMessageDialog(null, "Se encontró al Paciente " + pacienteEncontrado.getPersonaPaciente().getNombre() + ", el paciente será modificado!");
                             // Modifico el paciente de la lista
+                            loginController.getUsers().replace(pacienteEncontrado.getPersonaPaciente().getUsername(),passwordModificado.getText());
                             pacienteEncontrado.getPersonaPaciente().setNombre(nombreModificado.getText());
                             pacienteEncontrado.getPersonaPaciente().setApellido(apellidoModificado.getText());
                             pacienteEncontrado.getPersonaPaciente().setCedula(cedulaModificada.getText());
@@ -512,6 +529,7 @@ public class InterfazProyectoFinal extends JFrame{
                             pacienteEncontrado.setUserPassword(passwordModificado.getText());
                             pacienteEncontrado.setPrioridadPaciente(prioridadPaciente);
                             pacienteEncontrado.setSeguroMedico(seguroMedico);
+
 
                         } else {
 
@@ -551,9 +569,14 @@ public class InterfazProyectoFinal extends JFrame{
                                                             apellidoFIsio.getText(),
                                                             cedulaFisio.getText(),
                                                             generoFisio.getSelectedItem().toString(),
-                                                            dia,mes,Integer.parseInt(anioFisio.getText()));
+                                                            dia,mes,Integer.parseInt(anioFisio.getText())
+                                                            ,usernameFisio.getText()
+                                                            ,passwordFisio.getText());
                         Doctor doctorNuevo = new Doctor(textFieldEspecialidad.getText(),nuevaPersona);
                         doctores.add(doctorNuevo);
+                        loginController.register(nuevaPersona);
+                        JOptionPane.showMessageDialog(null,"Felicidades, se ha registrado correctamente!");
+
                     } else {
                         JOptionPane.showMessageDialog(null,"Verifique la información!");
                     }
@@ -573,6 +596,7 @@ public class InterfazProyectoFinal extends JFrame{
                     Doctor doctorEncontrado = searchBinaryDoctores(doctores, nombreFisioParaEliminar.getText());
                     if ( doctorEncontrado != null) {
                         JOptionPane.showMessageDialog(null,"Se encontró al Doctor "+doctorEncontrado.getPersonaDoctor().getNombre() + ", el doctor será eliminado!");
+                        loginController.getUsers().remove(doctorEncontrado.getPersonaDoctor().getUsername());
                         doctores.remove(doctorEncontrado);
                     } else {
                         JOptionPane.showMessageDialog(null, "Doctor no encontrado!");
@@ -600,6 +624,7 @@ public class InterfazProyectoFinal extends JFrame{
 
                             JOptionPane.showMessageDialog(null, "Se encontró al Doctor " + doctorEncontrado.getPersonaDoctor().getNombre() + ", el doctor será modificado!");
                             // Modifico el paciente de la lista
+                            loginController.getUsers().replace(doctorEncontrado.getPersonaDoctor().getUsername(),nuevaPasswordFisio.getText());
                             doctorEncontrado.getPersonaDoctor().setNombre(nuevoNombreFisio.getText());
                             doctorEncontrado.getPersonaDoctor().setApellido(nuevoApellidoFisio.getText());
                             doctorEncontrado.getPersonaDoctor().setCedula(nuevaCedulaFisio.getText());
@@ -625,7 +650,29 @@ public class InterfazProyectoFinal extends JFrame{
                 }
             }
         });
+        cerrarSesionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cerrarSesion();
+                cerrarSesionButton.setVisible(false);
+                iniciarSesionButton.setVisible(true);
+                JOptionPane.showMessageDialog(null,"Ha cerrado sesión correctamente!");
+            }
+        });
     }
+
+    private void cerrarSesion() {
+        tabbedPane1.setEnabledAt(1,false);
+        tabbedPane1.setEnabledAt(2,false);
+        tabbedPane1.setEnabledAt(3,false);
+        tabbedPane1.setEnabledAt(4,false);
+        tabbedPane1.setEnabledAt(6,false);
+        tabbedPane1.setEnabledAt(7,false);
+        tabbedPane1.setEnabledAt(8,false);
+        tabbedPanePacientes.setEnabledAt(1,false);
+        tabbedPanePacientes.setEnabledAt(2,false);
+    }
+
     public double determinarValorPagar(JComboBox comboboxAux,JTextField textFieldAux){
         double valorPagar=0.0;
         if (comboboxAux.getSelectedIndex()==0){

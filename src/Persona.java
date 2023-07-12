@@ -36,7 +36,7 @@ public class Persona {
     public Persona() {
     }
 
-    public Persona(String nombre, String apellido, String cedula, String genero, int diaNacimiento, int mesNacimiento, int anioNacimiento/*, String username, String password*/) {
+    public Persona(String nombre, String apellido, String cedula, String genero, int diaNacimiento, int mesNacimiento, int anioNacimiento, String username, String password) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -44,8 +44,8 @@ public class Persona {
         this.diaNacimiento = diaNacimiento;
         this.mesNacimiento = mesNacimiento;
         this.anioNacimiento = anioNacimiento;
-        this.username = "H7djtv";
-        this.password = "f1e3l0i4pe";
+        this.username = username;
+        this.password = password;
     }
 
     public String getNombre() {
