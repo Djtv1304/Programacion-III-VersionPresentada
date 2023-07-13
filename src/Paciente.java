@@ -8,6 +8,7 @@ public class Paciente  implements Cloneable {
     private boolean seguroMedico;
     private String correo;
     private String userPassword;
+    private boolean isPrioritario;
 
     public Paciente(Persona personaPaciente, int prioridadPaciente, boolean seguroMedico, String correo, String userPassword) {
         this.personaPaciente = personaPaciente;
@@ -15,6 +16,15 @@ public class Paciente  implements Cloneable {
         this.seguroMedico = seguroMedico;
         this.correo = correo;
         this.userPassword = userPassword;
+        this.isPrioritario = prioridadPaciente == 2 ? true : false;
+    }
+
+    public boolean isPrioritario() {
+        return isPrioritario;
+    }
+
+    public void setPrioritario(boolean prioritario) {
+        isPrioritario = prioritario;
     }
 
     public Persona getPersonaPaciente() {

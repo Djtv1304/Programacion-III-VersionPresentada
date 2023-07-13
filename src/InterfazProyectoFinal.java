@@ -1,8 +1,15 @@
+import com.toedter.calendar.JDateChooser;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class InterfazProyectoFinal extends JFrame{
@@ -79,7 +86,7 @@ public class InterfazProyectoFinal extends JFrame{
     private JTabbedPane tabbedPane5;
     private JTabbedPane tabbedPane6;
     private JComboBox comboBoxPrioridadPaciente;
-    private JTextArea textArea3;
+    private JTextArea textAreaCitasDeHoy;
     private JButton mostrarCitasAgendadasDeButton;
     private JTabbedPane tabbedPanePacientes;
     private JTextField textFieldEliminarPaciente;
@@ -122,6 +129,29 @@ public class InterfazProyectoFinal extends JFrame{
     private JPasswordField nuevaPasswordFisio;
     private JButton modificarFisioButton;
     private JButton cerrarSesionButton;
+    private JTextField textFieldNombreParaCita;
+    private JPanel JPanelDatePicker;
+    private JButton agendarCitaButton;
+    private JComboBox comboBoxHorasCitas;
+    private JTextField textFieldNombreParaCancelarCita;
+    private JComboBox comboBoxEliminarCita;
+    private JLabel labelEliminarCita;
+    private JLabel labelEliminarCita2;
+    private JButton buscarCitasParaEliminarButton;
+    private JButton cancelarCitaButton;
+    private JTextArea textAreaDetalleCitasEliminar;
+    private JLabel labelDetalleCitas;
+    private JComboBox comboBoxCitaNuevaHora;
+    private JTextField textFieldNombreCitaModificar;
+    private JButton citaBuscarParaModificarButton;
+    private JLabel labelCitasModificar;
+    private JLabel labelCitasModificar2;
+    private JLabel labelCitasModificar3;
+    private JLabel labelCitasModificar4;
+    private JComboBox comboBoxCitaModificar;
+    private JTextArea textAreaCitaModificar;
+    private JButton citaModificarButton;
+    private JPanel fechaImprimirCitasAgendadas;
     private List<Paciente> pacientes=new ArrayList<>();
     private List<Doctor> doctores=new ArrayList<>();
     private LoginController loginController = new LoginController();
@@ -136,16 +166,50 @@ public class InterfazProyectoFinal extends JFrame{
     Vertice verticeNew;
     Tratamiento tratamiento;
     int contador=0;
+    private JDateChooser dateChooser = new JDateChooser();
+    private JDateChooser dateChooser2 = new JDateChooser();
+    private SistemaDeCitas sistemaDeCitas;
+
+    Date date ;
 
     public InterfazProyectoFinal() {
 
-    cerrarSesion();
-    cerrarSesionButton.setVisible(false);
+        List<LocalTime> horasDisponibles = new ArrayList<>();
+        LocalTime horaInicio = LocalTime.of(7, 0);
+        LocalTime horaFin = LocalTime.of(16, 0);
+        while (!horaInicio.isAfter(horaFin)) {
+            horasDisponibles.add(horaInicio);
+            horaInicio = horaInicio.plusHours(1);
+        }
+
+        sistemaDeCitas = new SistemaDeCitas(horasDisponibles);
+        
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        dateChooser.setDateFormatString("dd/MM/yyyy");
+
+        cerrarSesion();
+        cerrarSesionButton.setVisible(false);
+        labelEliminarCita.setVisible(false);
+        labelEliminarCita2.setVisible(false);
+        labelDetalleCitas.setVisible(false);
+        textAreaDetalleCitasEliminar.setVisible(false);
+        comboBoxEliminarCita.setVisible(false);
+
+        labelCitasModificar.setVisible(false);
+        labelCitasModificar2.setVisible(false);
+        labelCitasModificar3.setVisible(false);
+        labelCitasModificar4.setVisible(false);
+        textAreaCitaModificar.setVisible(false);
+        comboBoxCitaModificar.setVisible(false);
+        comboBoxCitaNuevaHora.setVisible(false);
+        citaModificarButton.setVisible(false);
+
+        JPanelDatePicker.add(dateChooser);
+        fechaImprimirCitasAgendadas.add(dateChooser2);
 
     Persona ADMIN = new Persona();
     ADMIN.setUsername("admin");
     ADMIN.setPassword("admin");
-
     loginController.register(ADMIN);
 
     setTitle("GUI Proyecto2");
@@ -158,15 +222,17 @@ public class InterfazProyectoFinal extends JFrame{
     Persona dotorA=new Persona("Dr","House","1899105286","Masculino",26,12,1991,"123","123");
     Persona dotorB=new Persona("Dr","Malito","1899105286","Masculino",26,12,1991,"123","123");
     Persona dotorC=new Persona("Dr","Saul","1899105286","Masculino",26,12,1991,"123","123");
-    Paciente pacienteA=new Paciente(personaA,3,true,"Juan@gmial.com","nose");
-    Paciente pacienteB=new Paciente(personaB,2,true,"Lionel@gmial.com","nose");
-    Paciente pacienteC=new Paciente(personaC,2,false,"Cr7@gmial.com","nose");
-    Paciente pacienteD=new Paciente(personaD,3,true,"Juan@gmial.com","nose");
-    Paciente pacienteE=new Paciente(personaE,1,true,"Lionel@gmial.com","nose");
-    Paciente pacienteF=new Paciente(personaF,1,false,"Cr7@gmial.com","nose");
+    Paciente pacienteA=new Paciente(personaA,2,true,"Juan@gmial.com","123");
+    Paciente pacienteB=new Paciente(personaB,2,true,"Lionel@gmial.com","123");
+    Paciente pacienteC=new Paciente(personaC,2,false,"Cr7@gmial.com","123");
+    Paciente pacienteD=new Paciente(personaD,2,true,"Juan@gmial.com","123");
+    Paciente pacienteE=new Paciente(personaE,1,true,"Lionel@gmial.com","123");
+    Paciente pacienteF=new Paciente(personaF,1,false,"Cr7@gmial.com","123");
     Doctor doctorA=new Doctor("Tren Sup",dotorA);
     Doctor doctorB=new Doctor("Core",dotorB);
     Doctor doctorC=new Doctor("Tren Inf",dotorC);
+
+    llenarComboBoxHorasCitas();
 
     buttonCrearFactura.addActionListener(new ActionListener() {
 
@@ -659,6 +725,224 @@ public class InterfazProyectoFinal extends JFrame{
                 JOptionPane.showMessageDialog(null,"Ha cerrado sesión correctamente!");
             }
         });
+        agendarCitaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                date = dateChooser.getDate();
+                LocalDate fechaLocal = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Convierto Date a LocalDate
+                Paciente pacienteDeLaCita = null;
+
+                if ( !textFieldNombreParaCita.getText().isEmpty() ){
+
+                    for (Paciente x : pacientes){
+                        if (textFieldNombreParaCita.getText().equals(x.getPersonaPaciente().getNombre()) )
+                            pacienteDeLaCita = x;
+                    }
+
+                }
+
+                if ( pacienteDeLaCita == null) {
+
+                    JOptionPane.showMessageDialog(null, "Verifique los datos ingresados!");
+
+                }
+                else{
+
+                    sistemaDeCitas.reservarCita(pacienteDeLaCita, fechaLocal,(LocalTime) comboBoxHorasCitas.getSelectedItem());
+
+                }
+            }
+        });
+        buscarCitasParaEliminarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if ( !textFieldNombreParaCancelarCita.getText().isEmpty() ) {
+
+                    StringBuilder sb = new StringBuilder();
+
+                    for (Cita c : sistemaDeCitas.getColaDeCitas()) {
+
+                        if ( c.getPaciente().getPersonaPaciente().getNombre().equals(textFieldNombreParaCancelarCita.getText()) ) {
+
+                            JOptionPane.showMessageDialog(null,"Se ha encontrado una cita asociada al paciente!");
+                            comboBoxEliminarCita.addItem( c.getFecha() );
+                            sb.append("Fecha: ").append(c.getFecha()).append(" / Hora:").append(c.getHora()).append("\n");
+                        }
+
+                    }
+
+                    labelEliminarCita.setVisible(true);
+                    labelEliminarCita2.setVisible(true);
+                    labelDetalleCitas.setVisible(true);
+                    textAreaDetalleCitasEliminar.setVisible(true);
+                    comboBoxEliminarCita.setVisible(true);
+                    cancelarCitaButton.setVisible(true);
+                    textAreaDetalleCitasEliminar.setText(sb.toString());
+
+                } else {
+
+                    JOptionPane.showMessageDialog(null, "Verifique la información ingresada!");
+
+                }
+            }
+        });
+        cancelarCitaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Cita citaEncontrada = null;
+
+                if (comboBoxEliminarCita.getItemCount() > 0) {
+
+                    for (Cita c : sistemaDeCitas.getColaDeCitas()) {
+
+                        if ( c.getFecha().equals(comboBoxEliminarCita.getSelectedItem()) ) {
+
+                            citaEncontrada = c;
+
+                        }
+
+                    }
+
+                    if ( citaEncontrada != null) {
+
+                        sistemaDeCitas.cancelarCita( citaEncontrada );
+                        JOptionPane.showMessageDialog(null, "La cita ha sido borrada exitosamente!");
+
+                    } else {
+
+                        JOptionPane.showMessageDialog(null, "No se ha podido encontrar la cita para eliminarla, intente nuevamente!");
+
+                    }
+
+                } else {
+
+                    JOptionPane.showMessageDialog(null, "No existen citas para eliminar, verifique la información!");
+
+                }
+
+                comboBoxEliminarCita.removeAllItems(); // Limpio el JComboBox
+                labelEliminarCita.setVisible(false);
+                labelEliminarCita2.setVisible(false);
+                labelDetalleCitas.setVisible(false);
+                textAreaDetalleCitasEliminar.setVisible(false);
+                comboBoxEliminarCita.setVisible(false);
+                cancelarCitaButton.setVisible(false);
+            }
+        });
+
+        citaBuscarParaModificarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if ( !textFieldNombreCitaModificar.getText().isEmpty() ) {
+
+                    StringBuilder sb = new StringBuilder();
+
+                    for (Cita c : sistemaDeCitas.getColaDeCitas()) {
+
+                        if ( c.getPaciente().getPersonaPaciente().getNombre().equals(textFieldNombreCitaModificar.getText()) ) {
+
+                            JOptionPane.showMessageDialog(null,"Se ha encontrado una cita asociada al paciente!");
+                            comboBoxCitaModificar.addItem( c.getFecha() );
+                            sb.append("Fecha: ").append(c.getFecha()).append(" / Hora:").append(c.getHora()).append("\n");
+                        }
+
+                    }
+
+                    labelCitasModificar.setVisible(true);
+                    labelCitasModificar2.setVisible(true);
+                    labelCitasModificar3.setVisible(true);
+                    labelCitasModificar4.setVisible(true);
+                    textAreaCitaModificar.setVisible(true);
+                    comboBoxCitaModificar.setVisible(true);
+                    comboBoxCitaNuevaHora.setVisible(true);
+                    citaModificarButton.setVisible(true);
+                    textAreaCitaModificar.setText(sb.toString());
+
+                } else {
+
+                    JOptionPane.showMessageDialog(null, "Verifique la información ingresada!");
+
+                }
+
+            }
+        });
+        citaModificarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Cita citaEncontrada = null;
+
+                if (comboBoxCitaModificar.getItemCount() > 0) {
+
+                    for (Cita c : sistemaDeCitas.getColaDeCitas()) {
+
+                        if ( c.getFecha().equals(comboBoxCitaModificar.getSelectedItem()) ) {
+
+                            citaEncontrada = c;
+
+                        }
+
+                    }
+
+                    if ( citaEncontrada != null) {
+
+                        sistemaDeCitas.reagendarCita( citaEncontrada , (LocalTime) comboBoxCitaNuevaHora.getSelectedItem());
+                        JOptionPane.showMessageDialog(null, "La hora de la cita ha sido modificada exitosamente!");
+
+                    } else {
+
+                        JOptionPane.showMessageDialog(null, "No se ha podido encontrar la cita para modificarla, intente nuevamente!");
+
+                    }
+
+                } else {
+
+                    JOptionPane.showMessageDialog(null, "No existen citas para modificar, verifique la información!");
+
+                }
+
+                labelCitasModificar.setVisible(false);
+                labelCitasModificar2.setVisible(false);
+                labelCitasModificar3.setVisible(false);
+                labelCitasModificar4.setVisible(false);
+                textAreaCitaModificar.setVisible(false);
+                comboBoxCitaModificar.setVisible(false);
+                comboBoxCitaNuevaHora.setVisible(false);
+                citaModificarButton.setVisible(false);
+
+            }
+        });
+
+        mostrarCitasAgendadasDeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    if (!sistemaDeCitas.getColaDeCitas().isEmpty()) {
+
+                        date = dateChooser2.getDate();
+                        LocalDate fechaLocal = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Convierto Date a LocalDate
+
+                        String mensaje = sistemaDeCitas.verHorarioDeCitasAgendadas(fechaLocal);
+
+                        textAreaCitasDeHoy.setText(mensaje);
+
+                    } else {
+
+                        JOptionPane.showMessageDialog(null, "La lista de citas se encuentra vacía, intente nuevamente más tarde!");
+
+                    }
+                } catch (Exception x) {
+
+                    JOptionPane.showMessageDialog(null, "Hubo un error al imprimir, intente nuevamente más tarde!");
+
+                }
+            }
+        });
     }
 
     private void cerrarSesion() {
@@ -820,6 +1104,14 @@ public class InterfazProyectoFinal extends JFrame{
             }
         }
         return null;
+    }
+
+    public void llenarComboBoxHorasCitas() {
+
+        for (LocalTime x : sistemaDeCitas.getHorariosDisponibles()) {
+            comboBoxHorasCitas.addItem(x);
+            comboBoxCitaNuevaHora.addItem(x);
+        }
     }
 
 
