@@ -13,8 +13,6 @@ class Cita implements Comparable<Cita> {
         this.hora = hora;
     }
 
-
-
     @Override
     public int compareTo(Cita otraCita) {
         // Primero comparamos las fechas de las citas
@@ -61,6 +59,14 @@ class Cita implements Comparable<Cita> {
 
     public void setHora(LocalTime hora) {
         this.hora = hora;
+    }
+
+    @Override
+    public String toString() {
+        return "Cita:\n" +
+                "Paciente: " + paciente.getPersonaPaciente().getNombre() + " " + paciente.getPersonaPaciente().getApellido() + "\n" +
+                "Fecha: " + fecha + "\n" +
+                "Hora: " + hora + "\n\n";
     }
 }
 

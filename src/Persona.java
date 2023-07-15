@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.Period;
+
 public class Persona {
     private String nombre;
     private String apellido;
@@ -104,8 +107,12 @@ public class Persona {
         this.anioNacimiento = anioNacimiento;
     }
 
-    //Realizar el cálculo de la edad de persona
-    public void calcularEdad() {
+    public int calcularEdad() {
+
+        LocalDate fechaNacimiento = LocalDate.of(this.anioNacimiento, this.mesNacimiento, this.diaNacimiento);
+        LocalDate fechaActual = LocalDate.now();
+        Period periodo = Period.between(fechaNacimiento, fechaActual);
+        return periodo.getYears();
 
     }
 }

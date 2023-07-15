@@ -71,13 +71,13 @@ public class Factura {
 
     @Override
     public String toString() {
-        return "\nFactura{" +
-                "\npacienteFactura=" + pacienteFactura +
-                "\n, cantidadTerapias=" + cantidadTerapias +
-                "\n, descripcion='" + descripcion + '\'' +
-                "\n, valorTotalPagar=" + valorTotalPagar +
-                "\n, formaDePagoFactura=" + formaDePagoFactura +
-                "\n, fechaDiaActual=" + fechaDiaActual +
-                '}';
+        return "Factura" +
+                "\nPaciente de la factura: " + pacienteFactura.getPersonaPaciente().getNombre() + " " + pacienteFactura.getPersonaPaciente().getApellido() +
+                "\nCantidad de terapias: " + cantidadTerapias +
+                "\nDescripción: " + descripcion +
+                "\nValor total a pagar: " + valorTotalPagar +
+                "\nForma de pago: " + formaDePagoFactura +
+                "\nFecha de la factura: " + fechaDiaActual +
+                "\n\n";
     }
 }

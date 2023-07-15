@@ -4,7 +4,7 @@ import java.util.List;
 public class Paciente  implements Cloneable {
 
     private Persona personaPaciente;
-    private int prioridadPaciente;
+    private int prioridadPaciente; // 2 significa prioritario y 1 que no lo es
     private boolean seguroMedico;
     private String correo;
     private String userPassword;
@@ -73,12 +73,13 @@ public class Paciente  implements Cloneable {
 
     @Override
     public String toString() {
-        return "Paciente{" +
-                "\npersonaPaciente=" + personaPaciente +
-                "\n, prioridadPaciente=" + prioridadPaciente +
-                "\n, seguroMedico=" + seguroMedico +
-                "\n, correo='" + correo + '\'' +
-                "\n, userPassword='" + userPassword + '\'' +
-                '}';
+        return "Paciente:\n" +
+                "Nombres: " + personaPaciente.getNombre() + " " + personaPaciente.getApellido() +"\n" +
+                "Cédula: " + personaPaciente.getCedula() + "\n" +
+                "Género: " + personaPaciente.getGenero() + "\n" +
+                "El paciente cuenta con seguro médico: " + seguroMedico + "\n" +
+                "Correo: " + correo + "\n" +
+                "Edad: " + personaPaciente.calcularEdad() + " años" +"\n" +
+                "El paciente es prioritario: " + isPrioritario + "\n\n";
     }
 }

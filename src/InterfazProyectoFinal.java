@@ -3,11 +3,9 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -152,6 +150,22 @@ public class InterfazProyectoFinal extends JFrame{
     private JTextArea textAreaCitaModificar;
     private JButton citaModificarButton;
     private JPanel fechaImprimirCitasAgendadas;
+    private JTabbedPane tabbedPane7;
+    private JTextArea textAreaListaPacientes;
+    private JButton imprimirLaListaDeButton;
+    private JButton PacientesxPrioridadButton;
+    private JTextArea textAreaListaFisio;
+    private JButton imprimirListaDeFisioterapeutasButton;
+    private JTextField textFieldImprimirPacientexCedula;
+    private JTextArea textAreaImprimirPacientexCedula;
+    private JButton ImprimirxCedulabutton;
+    private JTextField textFieldImprimirFisioxCedula;
+    private JTextArea textAreaImprimirFisioxCedula;
+    private JButton ImprimirFisioxCedulaButton;
+    private JTextArea textAreaHIstorialDeCitas;
+    private JTextArea textAreaHistorialDeFacturas;
+    private JButton HistorialDeCitasButton;
+    private JButton HistorialDeFacturasButton;
     private List<Paciente> pacientes=new ArrayList<>();
     private List<Doctor> doctores=new ArrayList<>();
     private LoginController loginController = new LoginController();
@@ -169,7 +183,6 @@ public class InterfazProyectoFinal extends JFrame{
     private JDateChooser dateChooser = new JDateChooser();
     private JDateChooser dateChooser2 = new JDateChooser();
     private SistemaDeCitas sistemaDeCitas;
-
     Date date ;
 
     public InterfazProyectoFinal() {
@@ -183,9 +196,9 @@ public class InterfazProyectoFinal extends JFrame{
         }
 
         sistemaDeCitas = new SistemaDeCitas(horasDisponibles);
-        
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
         dateChooser.setDateFormatString("dd/MM/yyyy");
+        dateChooser2.setDateFormatString("dd/MM/yyyy");
 
         cerrarSesion();
         cerrarSesionButton.setVisible(false);
@@ -207,32 +220,32 @@ public class InterfazProyectoFinal extends JFrame{
         JPanelDatePicker.add(dateChooser);
         fechaImprimirCitasAgendadas.add(dateChooser2);
 
-    Persona ADMIN = new Persona();
-    ADMIN.setUsername("admin");
-    ADMIN.setPassword("admin");
-    loginController.register(ADMIN);
+        Persona ADMIN = new Persona();
+        ADMIN.setUsername("admin");
+        ADMIN.setPassword("admin");
+        loginController.register(ADMIN);
 
-    setTitle("GUI Proyecto2");
-    Persona personaA=new Persona("Juan","Cuccitini","1727373688","Masculino",11,02,2003,"123","123");
-    Persona personaB=new Persona("Lionel","Messi","1711007086","Masculino",18,01,2001,"123","123");
-    Persona personaC=new Persona("Cristiano","Aveiro","1899105286","Masculino",26,12,1991,"123","123");
-    Persona personaD=new Persona("Anuel","Cuccitini","1727373688","Masculino",11,02,2003,"123","123");
-    Persona personaE=new Persona("Zaramay","Messi","1711007086","Masculino",18,01,2001,"123","123");
-    Persona personaF=new Persona("Duki","Aveiro","1899105286","Masculino",26,12,1991,"123","123");
-    Persona dotorA=new Persona("Dr","House","1899105286","Masculino",26,12,1991,"123","123");
-    Persona dotorB=new Persona("Dr","Malito","1899105286","Masculino",26,12,1991,"123","123");
-    Persona dotorC=new Persona("Dr","Saul","1899105286","Masculino",26,12,1991,"123","123");
-    Paciente pacienteA=new Paciente(personaA,2,true,"Juan@gmial.com","123");
-    Paciente pacienteB=new Paciente(personaB,2,true,"Lionel@gmial.com","123");
-    Paciente pacienteC=new Paciente(personaC,2,false,"Cr7@gmial.com","123");
-    Paciente pacienteD=new Paciente(personaD,2,true,"Juan@gmial.com","123");
-    Paciente pacienteE=new Paciente(personaE,1,true,"Lionel@gmial.com","123");
-    Paciente pacienteF=new Paciente(personaF,1,false,"Cr7@gmial.com","123");
-    Doctor doctorA=new Doctor("Tren Sup",dotorA);
-    Doctor doctorB=new Doctor("Core",dotorB);
-    Doctor doctorC=new Doctor("Tren Inf",dotorC);
+        setTitle("GUI Proyecto2");
+        Persona personaA=new Persona("Juan","Cuccitini","1727373688","Masculino",11,2,2003,"123","123");
+        Persona personaB=new Persona("Lionel","Messi","1711007088","Masculino",18,1,2001,"123","123");
+        Persona personaC=new Persona("Cristiano","Aveiro","1899105286","Masculino",26,12,1991,"123","123");
+        Persona personaD=new Persona("Anuel","AA","1727473688","Masculino",11,2,2003,"123","123");
+        Persona personaE=new Persona("Zaramay","Messi","1711007086","Masculino",18,1,2001,"123","123");
+        Persona personaF=new Persona("Duki","Aveiro","1899109897","Masculino",26,12,1991,"123","123");
+        Persona dotorA=new Persona("Dr","House","1899105281","Masculino",26,12,1991,"123","123");
+        Persona dotorB=new Persona("Dr","Malito","1899105282","Masculino",26,12,1991,"123","123");
+        Persona dotorC=new Persona("Dr","Saul","1899105283","Masculino",26,12,1991,"123","123");
+        Paciente pacienteA=new Paciente(personaA,2,true,"Juan@gmial.com","123");
+        Paciente pacienteB=new Paciente(personaB,2,true,"Lionel@gmail.com","123");
+        Paciente pacienteC=new Paciente(personaC,2,false,"Cr7@gmail.com","123");
+        Paciente pacienteD=new Paciente(personaD,1,true,"anuel@gmail.com","123");
+        Paciente pacienteE=new Paciente(personaE,2,true,"leo@gmail.com","123");
+        Paciente pacienteF=new Paciente(personaF,1,false,"esteban@gmail.com","123");
+        Doctor doctorA=new Doctor("Tren Superior",dotorA);
+        Doctor doctorB=new Doctor("Core",dotorB);
+        Doctor doctorC=new Doctor("Tren Inferior",dotorC);
 
-    llenarComboBoxHorasCitas();
+        llenarComboBoxHorasCitas();
 
     buttonCrearFactura.addActionListener(new ActionListener() {
 
@@ -517,6 +530,7 @@ public class InterfazProyectoFinal extends JFrame{
                         tabbedPane1.setEnabledAt(3, true);
                         tabbedPane1.setEnabledAt(4, true);
                         tabbedPane1.setEnabledAt(8,true);
+                        tabbedPane1.setEnabledAt(9,true);
                         tabbedPanePacientes.setEnabledAt(1,true);
                         tabbedPanePacientes.setEnabledAt(2,true);
 
@@ -943,6 +957,121 @@ public class InterfazProyectoFinal extends JFrame{
                 }
             }
         });
+
+        imprimirLaListaDeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                textAreaListaPacientes.setText("");
+                for (Paciente p: pacientes) {
+
+                    textAreaListaPacientes.append(p.toString());
+
+                }
+
+            }
+        });
+
+        PacientesxPrioridadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                textAreaListaPacientes.setText("");
+                pacientes.sort((p1, p2) -> Integer.compare(p2.getPrioridadPaciente(), p1.getPrioridadPaciente()));
+                for (Paciente p: pacientes) {
+
+                    textAreaListaPacientes.append(p.toString());
+
+                }
+
+            }
+        });
+        imprimirListaDeFisioterapeutasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                textAreaListaFisio.setText("");
+                for (Doctor d: doctores) {
+
+                    textAreaListaFisio.append(d.toString());
+
+                }
+
+            }
+        });
+        ImprimirxCedulabutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (!textFieldImprimirPacientexCedula.getText().isEmpty()) {
+
+                    textAreaImprimirPacientexCedula.setText("");
+                    for (Paciente p : pacientes) {
+
+                        if (p.getPersonaPaciente().getCedula().equals(textFieldImprimirPacientexCedula.getText())) {
+
+                            textAreaListaPacientes.append(p.toString());
+
+                        }
+
+                    }
+                } else {
+
+                   JOptionPane.showMessageDialog(null,"Verifique la cédula ingresada");
+
+                }
+            }
+        });
+        ImprimirFisioxCedulaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (!textFieldImprimirFisioxCedula.getText().isEmpty()) {
+
+                    textAreaImprimirFisioxCedula.setText("");
+                    for (Doctor d : doctores) {
+
+                        if (d.getPersonaDoctor().getCedula().equals(textFieldImprimirFisioxCedula.getText())) {
+
+                            textAreaImprimirFisioxCedula.append(d.toString());
+
+                        }
+
+                    }
+                } else {
+
+                    JOptionPane.showMessageDialog(null,"Verifique la cédula ingresada");
+
+                }
+
+            }
+        });
+        HistorialDeCitasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                textAreaHIstorialDeCitas.setText("");
+                for (Cita c : sistemaDeCitas.getColaDeCitas()) {
+
+                    textAreaHIstorialDeCitas.append(c.toString());
+
+                }
+
+            }
+        });
+        HistorialDeFacturasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                textAreaHistorialDeFacturas.setText("");
+                for (Factura f : facturacionSystemNew.facturas) {
+
+                    textAreaHistorialDeFacturas.append(f.toString());
+
+                }
+
+            }
+        });
     }
 
     private void cerrarSesion() {
@@ -953,6 +1082,7 @@ public class InterfazProyectoFinal extends JFrame{
         tabbedPane1.setEnabledAt(6,false);
         tabbedPane1.setEnabledAt(7,false);
         tabbedPane1.setEnabledAt(8,false);
+        tabbedPane1.setEnabledAt(9,false);
         tabbedPanePacientes.setEnabledAt(1,false);
         tabbedPanePacientes.setEnabledAt(2,false);
     }
