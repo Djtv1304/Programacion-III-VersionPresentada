@@ -29,4 +29,10 @@ public class Doctor implements Cloneable  {
         Doctor clone=(Doctor) super.clone();
         return clone;
     }
+    public String toString() {
+        return "Doctor{" +
+                "especialidadDoctor='" + especialidadDoctor +
+                ", personaDoctor=" + personaDoctor +
+                '}';
+    }
 }

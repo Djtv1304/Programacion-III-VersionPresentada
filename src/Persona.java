@@ -108,4 +108,10 @@ public class Persona {
     public void calcularEdad() {
 
     }
+    public String toString() {
+        return "Persona{" +
+                "nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                '}';
+    }
 }
