@@ -1,6 +1,7 @@
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -218,7 +219,7 @@ public class InterfazProyectoFinal extends JFrame{
         citaModificarButton.setVisible(false);
 
         JPanelDatePicker.add(dateChooser);
-        fechaImprimirCitasAgendadas.add(dateChooser2);
+        //fechaImprimirCitasAgendadas.add(dateChooser2);
 
         Persona ADMIN = new Persona();
         ADMIN.setUsername("admin");
@@ -430,34 +431,52 @@ public class InterfazProyectoFinal extends JFrame{
         CONFIRMARESTADOTRATAMIENTOButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (comboBox5.getSelectedItem().toString().equalsIgnoreCase("No muestra Avace")){
-                    grafoNew.getVertexByValuePaciente(textField11.getText()).setResultado("No muestra Avace");
-                }if(comboBox5.getSelectedItem().toString().equalsIgnoreCase("Muestra Avance")){
-                    grafoNew.getVertexByValuePaciente(textField11.getText()).setResultado("Muestra Avance");
-                }if(comboBox5.getSelectedItem().toString().equalsIgnoreCase("Muestra Gran Avance")){
-                    grafoNew.getVertexByValuePaciente(textField11.getText()).setResultado("Muestra Gran Avance");
+                Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
+                if (comboBox5.getSelectedIndex() == 0){
+                    recorrerGrafoConNombre.getVertexByValuePaciente(estadoTratamientoString(textField14)).getDataT().setEstadoDelTratamiento("No muestra Avace");
+                }else if(comboBox5.getSelectedIndex() == 1){
+                    recorrerGrafoConNombre.getVertexByValuePaciente(estadoTratamientoString(textField14)).getDataT().setEstadoDelTratamiento("Muestra Avance");
+                }else if(comboBox5.getSelectedIndex() == 2){
+                    recorrerGrafoConNombre.getVertexByValuePaciente(estadoTratamientoString(textField14)).getDataT().setEstadoDelTratamiento("Muestra Gran Avance");
                 }else{
                     JOptionPane.showMessageDialog(null,"Seleccione un resultado");
+                }
+                textArea2.setText("");
+                if (recorrerGrafoConNombre!=null) {
+                    for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+
+                        if (recorrerVertice.getData() !=null){
+                            textField11.setText(recorrerVertice.getData().getPersonaPaciente().getNombre());
+                        }
+                        if (recorrerVertice.getDataD() !=null){
+                            textField12.setText(recorrerVertice.getDataD().getPersonaDoctor().getApellido());
+                        }
+                        if (recorrerVertice.getDataT() !=null){
+                            textField13.setText(recorrerVertice.getDataT().getDescripcionDelTratamiento());
+                        }
+                        textArea2.append( "\n"+ recorrerVertice.print(grafoNew.isWeighted()));
+                    }
                 }
             }
         });
         buscarButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*if (buscarGrafoPorPaciente(grafos,textField14.getText())!=null){
-                    ArrayList<Vertice> visitedVeritce=buscarGrafoPorPaciente(grafos,textField14.getText()).depthFirstSearch(grafoNew.getVertexByValuePaciente(textField14.getText()));
-                    textArea2.setText(" ");
-                    for (Vertice recorrerVertice:visitedVeritce){
-                        textArea2.append("\n"+recorrerVertice.getData());
-                        textArea2.append("\n"+recorrerVertice.getDataD());
-                        textArea2.append("\n"+recorrerVertice.getDataT());
+                textArea2.setText("");
+                Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
+                if (recorrerGrafoConNombre!=null) {
+                    for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
 
-                    }
-
-                }*/
-                if (buscarGrafoPorPaciente(grafos,textField14.getText())!=null) {
-                    for (Vertice recorrerVertice : buscarGrafoPorPaciente(grafos,textField14.getText()).getVertices()) {
-                        textArea2.append("\n" + recorrerVertice.print(grafoNew.isWeighted()));
+                        if (recorrerVertice.getData() !=null){
+                            textField11.setText(recorrerVertice.getData().getPersonaPaciente().getNombre());
+                        }
+                        if (recorrerVertice.getDataD() !=null){
+                            textField12.setText(recorrerVertice.getDataD().getPersonaDoctor().getApellido());
+                        }
+                        if (recorrerVertice.getDataT() !=null){
+                            textField13.setText(recorrerVertice.getDataT().getDescripcionDelTratamiento());
+                        }
+                        textArea2.append( "\n"+ recorrerVertice.print(grafoNew.isWeighted()));
                     }
                 }
 
@@ -957,6 +976,29 @@ public class InterfazProyectoFinal extends JFrame{
                 }
             }
         });
+        CAMBIARTRATAMIENTOButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
+                recorrerGrafoConNombre.getVertexByValuePaciente(estadoDescripcionTratamiento(textField14)).getDataT().setDescripcionDelTratamiento(textField13.getText());
+                textArea2.setText("");
+                if (recorrerGrafoConNombre!=null) {
+                    for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+
+                        if (recorrerVertice.getData() !=null){
+                            textField11.setText(recorrerVertice.getData().getPersonaPaciente().getNombre());
+                        }
+                        if (recorrerVertice.getDataD() !=null){
+                            textField12.setText(recorrerVertice.getDataD().getPersonaDoctor().getApellido());
+                        }
+                        if (recorrerVertice.getDataT() !=null){
+                            textField13.setText(recorrerVertice.getDataT().getDescripcionDelTratamiento());
+                        }
+                        textArea2.append( "\n"+ recorrerVertice.print(grafoNew.isWeighted()));
+                    }
+                }
+            }
+        });
 
         imprimirLaListaDeButton.addActionListener(new ActionListener() {
             @Override
@@ -1165,7 +1207,7 @@ public class InterfazProyectoFinal extends JFrame{
         int n = pacientes.size();
         for (int i = 0; i < n-1; i++) {
             for (int j = 0; j < n-i-1; j++) {
-                if (pacientes.get(j).getPrioridadPaciente()> pacientes.get(j+1).getPrioridadPaciente()) {
+                if (pacientes.get(j).getPrioridadPaciente() > pacientes.get(j+1).getPrioridadPaciente()) {
                     Paciente temp = pacientes.get(j);
                     pacientes.set(j,pacientes.get(j+1)) ;
                     pacientes.set(j+1,temp);
@@ -1228,12 +1270,43 @@ public class InterfazProyectoFinal extends JFrame{
 
     }
     public Grafo buscarGrafoPorPaciente(List<Grafo> grafosRecorrer,String nombrePaciente){
-        for (Grafo grafoAux:grafosRecorrer){
-            if (grafoAux.getVertexByValuePaciente(nombrePaciente)!=null){
-                return grafoAux;
+        if (grafosRecorrer != null) {
+            for (Grafo grafoAux : grafosRecorrer) {
+                if (grafoAux.getVertexByValuePaciente(nombrePaciente) != null) {
+                    return grafoAux;
+                }
             }
+        }else{
+            JOptionPane.showMessageDialog(null,"No existena nada en elos registros todavia");
         }
         return null;
+    }
+    public String estadoTratamientoString(JTextField paciente){
+        Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,paciente.getText());
+        if (recorrerGrafoConNombre!=null) {
+            for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+                if (recorrerVertice.getDataT() != null) {
+                        return recorrerVertice.getDataT().getEstadoDelTratamiento();
+                }
+            }
+        }
+        return "";
+
+    }
+    public String estadoDescripcionTratamiento(JTextField paciente){
+
+        Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,paciente.getText());
+        String informacion="";
+        if (recorrerGrafoConNombre!=null) {
+            for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+                if (recorrerVertice.getDataT() != null) {
+                    informacion=recorrerVertice.getDataT().getDescripcionDelTratamiento();
+                        return informacion;
+                }
+            }
+        }
+        return informacion;
+
     }
 
     public void llenarComboBoxHorasCitas() {

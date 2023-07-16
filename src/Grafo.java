@@ -89,12 +89,41 @@ public class Grafo {
     }
     public Vertice getVertexByValuePaciente(String value){//como paso un string lo que hace es buscar
         for (Vertice v:this.vertices){
-            if (v.getData().getPersonaPaciente().getNombre().equals(value)){
-                return v;
+            if (v.getData() != null) {
+                if (v.getData().getPersonaPaciente().getNombre().equals(value)) {
+                    return v;
+                }
+            }
+            if (v.getDataD() != null) {
+                if (v.getDataD().getPersonaDoctor().getNombre().equals(value)) {
+                    return v;
+                }
+            }
+            if (v.getDataT() != null) {
+                if (v.getDataT().getEstadoDelTratamiento().equals(value)) {
+                    //v.getDataT().setDescripcionDelTratamiento("");
+                    return v;
+                }
+            }
+            if (v.getDataT() != null) {
+                if (v.getDataT().getDescripcionDelTratamiento().equals(value)) {
+                    //v.getDataT().setDescripcionDelTratamiento("");
+                    return v;
+                }
             }
         }
         return null;
     }
+    /*public Vertice getVertexByValueT(String value){//como paso un string lo que hace es buscar
+        for (Vertice v:this.vertices){
+            if (v.getDataT() != null) {
+                if (v.getDataT().getDescripcionDelTratamiento().equals(value)) {
+                    return v;
+                }
+            }
+        }
+        return null;
+    }*/
     public ArrayList<Vertice> depthFirstSearch(Vertice startVertex) {
         ArrayList<Vertice> visitedVertices = new ArrayList<>();
         Stack<Vertice> stack = new Stack<>();

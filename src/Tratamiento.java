@@ -59,13 +59,13 @@ public class Tratamiento {
     public void setEstadoDelTratamiento(String estadoDelTratamiento) {
         this.estadoDelTratamiento = estadoDelTratamiento;
     }
-
-    public enum resultado {
-        NO_MUESTRA_PROGRESO,
-        MUESTRA_LEVE_PROGRESO,
-        MUESTRA_PROGRESO,
-        MUESTRA_MEJORA,
-        REHABILITADO_TOTALMENTE
+    @Override
+    public String toString() {
+        return "Tratamiento{" +
+                "ID=" + ID +
+                ", descripcionDelTratamiento='" + descripcionDelTratamiento + '\'' +
+                ", estadoDelTratamiento='" + estadoDelTratamiento + '\'' +
+                '}';
     }
 
 }

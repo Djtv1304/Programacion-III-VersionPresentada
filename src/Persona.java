@@ -115,4 +115,10 @@ public class Persona {
         return periodo.getYears();
 
     }
+    public String toString() {
+        return "Persona{" +
+                "nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                '}';
+    }
 }

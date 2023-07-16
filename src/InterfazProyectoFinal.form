@@ -1088,7 +1088,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value="Esteban"/>
+                        </properties>
                       </component>
                       <component id="49728" class="javax.swing.JLabel">
                         <constraints>
@@ -1104,7 +1106,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value="Enriquez"/>
+                        </properties>
                       </component>
                       <component id="1b33c" class="javax.swing.JLabel">
                         <constraints>
@@ -1120,7 +1124,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value="1711373686"/>
+                        </properties>
                       </component>
                       <component id="395c3" class="javax.swing.JLabel">
                         <constraints>
@@ -1156,7 +1162,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value="11"/>
+                        </properties>
                       </component>
                       <component id="38f1c" class="javax.swing.JLabel">
                         <constraints>
@@ -1172,7 +1180,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value="02"/>
+                        </properties>
                       </component>
                       <component id="cb6ee" class="javax.swing.JLabel">
                         <constraints>
@@ -1188,7 +1198,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value="2003"/>
+                        </properties>
                       </component>
                       <component id="ee266" class="javax.swing.JLabel">
                         <constraints>
@@ -1204,7 +1216,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value="estebanEr"/>
+                        </properties>
                       </component>
                       <component id="daa46" class="javax.swing.JLabel">
                         <constraints>
@@ -1220,7 +1234,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value="12345"/>
+                        </properties>
                       </component>
                       <component id="680c6" class="javax.swing.JLabel">
                         <constraints>

@@ -55,21 +55,27 @@ public class Vertice {
     }
     public String print(boolean showWeight){
         String message="";
-        if (this.edges.size()==0){
-            message +=this.data.toString()+"-->";
+        if (this.edges.size()==0 ){
+            if (this.data !=null){
+                message += this.data.toString()+"-->" ;
+            }
+            if (this.dataD !=null){
+                message += this.dataD.toString()+"-->" ;
+            }
+            if (this.dataT !=null){
+                message += this.dataT.toString()+"-->" ;
+            }
             return message;
         }
         for (int i=0;i<this.edges.size();i++){
             if(i==0){
                 message += this.edges.get(i).getInitialVertice().data.toString()+"-->";
+                message += this.edges.get(i).getInitialVertice().dataD.toString()+"-->";
+                message += this.edges.get(i).getInitialVertice().dataT.toString()+"-->";
             }
             message += this.edges.get(i).getFinalVertice().data.toString();
-            if (showWeight){
-                message+="("+this.edges.get(i).getWeight()+")";
-            }
-            if(i !=this.edges.size() -1){
-                message += ", ";
-            }
+            message += this.edges.get(i).getFinalVertice().data.toString();
+            message += this.edges.get(i).getFinalVertice().dataT.toString();
         }
         return message;
     }
