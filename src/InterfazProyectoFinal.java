@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -1114,6 +1116,120 @@ public class InterfazProyectoFinal extends JFrame{
 
             }
         });
+        textField9.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                validacionLetras(e);
+
+            }
+        });
+        textField10.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                validacionLetras(e);
+
+            }
+        });
+        textField14.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                validacionLetras(e);
+
+            }
+        });
+        textField11.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionLetras(e);
+            }
+        });
+        textField12.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionLetras(e);
+            }
+        });
+        textField13.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionLetras(e);
+            }
+        });
+        textField3.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionNumeros(e);
+            }
+        });
+        textFieldValoraPagarMo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionNumeros(e);
+            }
+        });
+        textField7.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionNumeros(e);
+            }
+        });
+        textField8.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionLetras(e);
+            }
+        });
+        KeyAdapter listenerValidarLetras = new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionLetras(e);
+            }
+        };
+
+        textFieldNombre.addKeyListener(listenerValidarLetras);
+        textFieldApellido.addKeyListener(listenerValidarLetras);
+        textFieldEliminarPaciente.addKeyListener(listenerValidarLetras);
+        nombreModificado.addKeyListener(listenerValidarLetras);
+        apellidoModificado.addKeyListener(listenerValidarLetras);
+        textFieldEliminarCuenta.addKeyListener(listenerValidarLetras);
+        nombreFisio.addKeyListener(listenerValidarLetras);
+        apellidoFIsio.addKeyListener(listenerValidarLetras);
+        textFieldEspecialidad.addKeyListener(listenerValidarLetras);
+        nombreFisioParaEliminar.addKeyListener(listenerValidarLetras);
+        nuevoNombreFisio.addKeyListener(listenerValidarLetras);
+        nuevoApellidoFisio.addKeyListener(listenerValidarLetras);
+        nuevaEspecFisio.addKeyListener(listenerValidarLetras);
+        textFieldNombreParaCita.addKeyListener(listenerValidarLetras);
+        textFieldNombreParaCancelarCita.addKeyListener(listenerValidarLetras);
+        textFieldNombreCitaModificar.addKeyListener(listenerValidarLetras);
+
+        KeyAdapter listenerValidarNumeros = new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                validacionNumeros(e);
+            }
+        };
+
+        textFieldCedula.addKeyListener(listenerValidarNumeros);
+        textFieldDiaN.addKeyListener(listenerValidarNumeros);
+        textFieldMesN.addKeyListener(listenerValidarNumeros);
+        textFieldAnioN.addKeyListener(listenerValidarNumeros);
+        cedulaModificada.addKeyListener(listenerValidarNumeros);
+        diaModificado.addKeyListener(listenerValidarNumeros);
+        mesModificado.addKeyListener(listenerValidarNumeros);
+        anioModificado.addKeyListener(listenerValidarNumeros);
+        cedulaFisio.addKeyListener(listenerValidarNumeros);
+        diaFisio.addKeyListener(listenerValidarNumeros);
+        mesFisio.addKeyListener(listenerValidarNumeros);
+        anioFisio.addKeyListener(listenerValidarNumeros);
+        nuevaCedulaFisio.addKeyListener(listenerValidarNumeros);
+        nuevoDiaFisio.addKeyListener(listenerValidarNumeros);
+        nuevoMesFisio.addKeyListener(listenerValidarNumeros);
+        nuevoAnioFisio.addKeyListener(listenerValidarNumeros);
+
     }
 
     private void cerrarSesion() {
@@ -1317,5 +1433,70 @@ public class InterfazProyectoFinal extends JFrame{
         }
     }
 
+    public void validacionLetras(java.awt.event.KeyEvent evt) {
+
+        char validar = evt.getKeyChar();
+        if (Character.isDigit(validar) ) {
+            getToolkit ().beep();
+            evt.consume ();
+            JOptionPane.showMessageDialog(null, "Ingresar solo letras");
+        }
+
+    }
+    public void validacionNumeros(java.awt.event.KeyEvent evt) {
+
+        char validar=evt.getKeyChar();
+        if (Character.isLetter(validar) || validar == '-') {
+            getToolkit ().beep();
+            evt.consume ();
+            JOptionPane.showMessageDialog(null, "Ingresar solo valores válidos");
+        }
+
+    }
+
+    public boolean validarCedulaEcuatoriana(String validarCedula) {
+
+        String cedulaComparar;
+        boolean decision = false;
+        boolean estado = false;
+
+
+        if ( validarCedula.length() == 10) { //R1
+            //
+            if ((Integer.parseInt(validarCedula.substring(0, 2)) <= 24) || (Integer.parseInt(validarCedula.substring(0, 2)) == 30)){
+                int coeficientes [] = {2,1,2,1,2,1,2,1,2};
+                int digitoVerificador = Integer.parseInt(validarCedula.substring(validarCedula.length()-1, validarCedula.length()));
+                int suma = 0;
+                int digitoXcoeficiente = 0;
+                int modulo = 0;
+                //R4
+                for (int i = 0;i < validarCedula.length()-1;i++){
+                    //P1
+                    digitoXcoeficiente = Integer.parseInt(validarCedula.substring(i, i+1)) * coeficientes[i]; //Obtiene digito por digito
+                    //P2
+                    digitoXcoeficiente = (digitoXcoeficiente > 9) ? digitoXcoeficiente -= 9 : digitoXcoeficiente; //En caso de que la multiplicacion sea mayora 9
+                    //P3
+                    suma += digitoXcoeficiente; //Obtiene la suma de digitos
+                }
+                //P4
+                modulo = suma%10;
+                //P5
+                if ((10-modulo) == digitoVerificador){
+                    estado = true;
+                }
+                if ( modulo == 0 && modulo == digitoVerificador){
+                    estado = true;
+                }
+            } else { //FIN R3
+                estado = false;
+                JOptionPane.showMessageDialog(null, "La cédula no pertenece a Ecuador.");
+            }
+        } else { //FIN R1
+            estado = false;
+            JOptionPane.showMessageDialog(null, "La cédula tiene menos o mas de 10 caracteres."); //R1
+        }
+
+        return estado;
+    }
 
 }
