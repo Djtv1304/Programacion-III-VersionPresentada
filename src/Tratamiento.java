@@ -6,6 +6,9 @@ public class Tratamiento {
     private String descripcionDelTratamiento;
     private String estadoDelTratamiento; //Finalizado, completado o en proceso
 
+    public Tratamiento() {
+    }
+
     public Tratamiento(int ID, Doctor doctorDelTratamiento, Paciente pacienteDelTratamiento, String descripcionDelTratamiento, String estadoDelTratamiento) {
         this.ID = ID;
         this.doctorDelTratamiento = doctorDelTratamiento;
@@ -61,11 +64,10 @@ public class Tratamiento {
     }
     @Override
     public String toString() {
-        return "Tratamiento{" +
-                "ID=" + ID +
-                ", descripcionDelTratamiento='" + descripcionDelTratamiento + '\'' +
-                ", estadoDelTratamiento='" + estadoDelTratamiento + '\'' +
-                '}';
+        return "Tratamiento: \n" +
+                "ID: " + ID + "\n" +
+                "Descripcion Del Tratamiento: " + descripcionDelTratamiento + "\n" +
+                "Estado Del Tratamiento: " + estadoDelTratamiento + "\n" ;
     }
 
 }

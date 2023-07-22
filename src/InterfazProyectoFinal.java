@@ -1,7 +1,6 @@
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -169,7 +168,13 @@ public class InterfazProyectoFinal extends JFrame{
     private JTextArea textAreaHistorialDeFacturas;
     private JButton HistorialDeCitasButton;
     private JButton HistorialDeFacturasButton;
+    private JButton cambiarDoctorButton;
+    private JButton cambiarPersonaButton;
+    private JComboBox comboBox6;
+    private JButton imprimirProgresoSegunIdButton;
+    private JButton eliminarButton;
     private List<Paciente> pacientes=new ArrayList<>();
+  //  private List<Paciente> pacientesCopia=new ArrayList<>();
     private List<Doctor> doctores=new ArrayList<>();
     private LoginController loginController = new LoginController();
     private List<Grafo> grafos=new ArrayList<>();
@@ -187,8 +192,15 @@ public class InterfazProyectoFinal extends JFrame{
     private JDateChooser dateChooser2 = new JDateChooser();
     private SistemaDeCitas sistemaDeCitas;
     Date date ;
+    private String id1=" ";
+    private String id2=" ";
+    private List<String> listaDeId=new ArrayList<>();
 
     public InterfazProyectoFinal() {
+        descativarInterfazIngresoProgreso();
+        descativarInterfazVisualizarProgreso();
+        desactivarInterfazModificarFactura();
+
 
         List<LocalTime> horasDisponibles = new ArrayList<>();
         LocalTime horaInicio = LocalTime.of(7, 0);
@@ -255,14 +267,14 @@ public class InterfazProyectoFinal extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            if (facturacionSystemNew.searchBinary(pacientes,textField2.getText()) != null){
-
-                Paciente pacienteGuardar = facturacionSystemNew.searchBinary(pacientes,textField2.getText());
-                double valorPagar = determinarValorPagar(comboBox1,textField3);
-                int formaPago = determinarFormaPago(comboBox2);
-                int cantidadTerapias = comboBox1.getSelectedIndex();
-                String descripcion = textField4.getText();
-
+            facturacionSystemNew.BurbujaxCorreo();
+            if (facturacionSystemNew.searchBinary(pacientes,textField2.getText())!=null){
+                facturacionSystemNew.BurbujaxCorreo();
+                Paciente pacienteGuardar=facturacionSystemNew.searchBinary(pacientes,textField2.getText());
+                double valorPagar=determinarValorPagar(comboBox1,textField3);
+                int formaPago=determinarFormaPago(comboBox2);
+                int cantidadTerapias=comboBox1.getSelectedIndex();
+                String descripcion=textField4.getText();
                 textField3.setText(String.valueOf(valorPagar));
                 facturaNew=new Factura(pacienteGuardar,cantidadTerapias,descripcion,valorPagar,formaPago,fechaDiaActual);
                 facturacionSystemNew.addFactura(facturaNew);
@@ -297,8 +309,8 @@ public class InterfazProyectoFinal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 String correo=textField5.getText();
                 if (facturacionSystemNew.searchBinaryFactura(facturacionSystemNew.facturas,correo)!=null){
+                    activarInterfazModificarFactura();
                     Factura facturaEncontrada=facturacionSystemNew.searchBinaryFactura(facturacionSystemNew.facturas,textField5.getText());
-
                     textFieldUsuarioMo.setText(facturaEncontrada.getPacienteFactura().getCorreo());
                     comboBoxCantidaddeterapiasMo.setSelectedItem(facturaEncontrada.getCantidadTerapias());
                     textFieldDescripcionMo.setText(facturaEncontrada.getDescripcion());
@@ -312,18 +324,17 @@ public class InterfazProyectoFinal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 String correo=textField5.getText();
                 String pacienteCorre=textFieldUsuarioMo.getText();
-
-                if (facturacionSystemNew.searchBinaryFactura(facturacionSystemNew.facturas,correo) != null){
-
+                facturacionSystemNew.BurbujaxCorreo();
+                if (facturacionSystemNew.searchBinaryFactura(facturacionSystemNew.facturas,correo)!=null){
+                    facturacionSystemNew.BurbujaxCorreo();
                     Factura facturaCambiar=facturacionSystemNew.searchBinaryFactura(facturacionSystemNew.facturas,correo);
-
+                    facturacionSystemNew.OrdenarFacturasxFecha();
                     if (facturacionSystemNew.searchBinary(pacientes,pacienteCorre)!=null){
                         double valorPagarNuevo=determinarValorPagar(comboBoxCantidaddeterapiasMo,textFieldValoraPagarMo);
                         int formaPagoNueva=determinarFormaPago(comboBoxFormaDepagoMo);
                         int cantidadTerapiasNueva=comboBoxCantidaddeterapiasMo.getSelectedIndex();
                         String descripcionNueva=textFieldDescripcionMo.getText();
                         Paciente pacienteAux=facturacionSystemNew.searchBinary(pacientes,pacienteCorre);
-
                         facturacionSystemNew.modificarPacientedeFactura(facturaCambiar,pacienteAux);
                         facturacionSystemNew.modificarCantidadTerapiasFactura(facturaCambiar,cantidadTerapiasNueva);
                         facturacionSystemNew.modificarDescripcionFactura(facturaCambiar,descripcionNueva);
@@ -378,12 +389,14 @@ public class InterfazProyectoFinal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 BurbujaxNombre();
                 if (searchBinary(getPacientes(),textField9.getText()) != null){
+                    activarInterfazIngresoProgreso();
                     JOptionPane.showMessageDialog(null,"Se encontro al Paciente "+searchBinary(getPacientes(),textField9.getText()).getPersonaPaciente().getNombre());
                     Grafo grafoSencillo=new Grafo(false,false);
                     grafoNew=grafoSencillo;
 
                 }else{
                     JOptionPane.showMessageDialog(null,"No se encontro al Paciente ");
+                    descativarInterfazIngresoProgreso();
                 }
 
             }
@@ -394,46 +407,54 @@ public class InterfazProyectoFinal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 BurbujaxNombreDoctores();
                 BurbujaxNombre();
-                if (enInicioCheckBox.isSelected()) {
+                tratamiento=null;
+                if (enInicioCheckBox.isSelected() && !enProgresoCheckBox.isSelected() && !completadoCheckBox.isSelected()) {
                     //tratamiento = new Tratamiento(contador, searchBinaryDoctores(getArregloBurbujaDoctores(),comboBox4.getSelectedItem().toString()),searchBinary(getArregloBurbuja(), textField9.getText()), textField10.getText(),"En Inicio");
                     tratamiento = new Tratamiento(contador,textField10.getText(),"En Inicio");
-                } else if (enProgresoCheckBox.isSelected()) {
+                } else if (enProgresoCheckBox.isSelected() && !enInicioCheckBox.isSelected() && !completadoCheckBox.isSelected()) {
                     //tratamiento = new Tratamiento(contador, searchBinaryDoctores(getArregloBurbujaDoctores(),comboBox4.getSelectedItem().toString()),searchBinary(getArregloBurbuja(), textField9.getText()), textField10.getText(),"En Progreso");
                     tratamiento = new Tratamiento(contador,textField10.getText(),"En Progreso");
-                }else if (completadoCheckBox.isSelected()) {
+                }else if (completadoCheckBox.isSelected() && !enProgresoCheckBox.isSelected() && !enInicioCheckBox.isSelected()) {
                     //tratamiento = new Tratamiento(contador, searchBinaryDoctores(getArregloBurbujaDoctores(),comboBox4.getSelectedItem().toString()),searchBinary(getArregloBurbuja(), textField9.getText()), textField10.getText(),"Completado");
                     tratamiento = new Tratamiento(contador,textField10.getText(),"Completado");
                 }else{
-                    JOptionPane.showMessageDialog(null,"Seleccione uno porfavor");
+                    JOptionPane.showMessageDialog(null,"Seleccione solo un 'estado' porfavor");
                 }
-                BurbujaxNombre();
-                Vertice verticeNuevoPaciente=new Vertice(searchBinary(getPacientes(),textField9.getText()));
-                verticeNew=verticeNuevoPaciente;
-                grafoNew.addVertice(verticeNew.getData());
-                BurbujaxNombreDoctores();
-                Vertice verticeNuevoDoctores=new Vertice(searchBinaryDoctores(getArregloBurbujaDoctores(),comboBox4.getSelectedItem().toString()));
-                verticeNew=verticeNuevoDoctores;
-                grafoNew.addVerticeDoctor(verticeNew.getDataD());
-                Vertice verticeNuevoTratamiento =new Vertice(tratamiento);
-                verticeNew=verticeNuevoTratamiento;
-                grafoNew.addVerticeDoctorTratamiento(verticeNew.getDataT());
-                Vertice verticeNuevoResultado =new Vertice("");
-                verticeNew=verticeNuevoResultado;
-                grafoNew.addVerticeDoctorResultado(verticeNew.getResultado());
+                if (tratamiento!=null) {
+                    BurbujaxNombre();
+                    Vertice verticeNuevoPaciente = new Vertice(searchBinary(getPacientes(), textField9.getText()));
+                    verticeNew = verticeNuevoPaciente;
+                    grafoNew.addVertice(verticeNew.getData());
+                    BurbujaxNombreDoctores();
+                    Vertice verticeNuevoDoctores = new Vertice(searchBinaryDoctores(getArregloBurbujaDoctores(), comboBox4.getSelectedItem().toString()));
+                    verticeNew = verticeNuevoDoctores;
+                    grafoNew.addVerticeDoctor(verticeNew.getDataD());
+                    Vertice verticeNuevoTratamiento = new Vertice(tratamiento);
+                    verticeNew = verticeNuevoTratamiento;
+                    grafoNew.addVerticeDoctorTratamiento(verticeNew.getDataT());
+                    Vertice verticeNuevoResultado = new Vertice("");
+                    verticeNew = verticeNuevoResultado;
+                    grafoNew.addVerticeDoctorResultado(verticeNew.getResultado());
 
 
-                grafoNew.addEdge(verticeNuevoPaciente,verticeNuevoDoctores,1);
-                grafoNew.addEdge(verticeNuevoPaciente,verticeNuevoTratamiento,1);
-                grafoNew.addEdge(verticeNuevoPaciente,verticeNuevoResultado,1);
+                    grafoNew.addEdge(verticeNuevoPaciente, verticeNuevoDoctores, 1);
+                    grafoNew.addEdge(verticeNuevoPaciente, verticeNuevoTratamiento, 1);
+                    grafoNew.addEdge(verticeNuevoPaciente, verticeNuevoResultado, 1);
 
-                grafos.add(grafoNew);
-                contador++;
+                    grafos.add(grafoNew);
+                    contador++;
+                    JOptionPane.showMessageDialog(null,"Excelente!, se ha creado la ficha de progreso");
+
+                }else{
+                    JOptionPane.showMessageDialog(null,"No se ha creado la ficha de progreso, revise que haya llenado los datos bien");
+                }
             }
         });
         CONFIRMARESTADOTRATAMIENTOButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
+                Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+                //Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
                 if (comboBox5.getSelectedIndex() == 0){
                     recorrerGrafoConNombre.getVertexByValuePaciente(estadoTratamientoString(textField14)).getDataT().setEstadoDelTratamiento("No muestra Avace");
                 }else if(comboBox5.getSelectedIndex() == 1){
@@ -466,21 +487,37 @@ public class InterfazProyectoFinal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 textArea2.setText("");
                 Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
-                if (recorrerGrafoConNombre!=null) {
-                    for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
 
-                        if (recorrerVertice.getData() !=null){
-                            textField11.setText(recorrerVertice.getData().getPersonaPaciente().getNombre());
+                    if (recorrerGrafoConNombre != null) {
+                        activarInterfazVisualizarProgreso();
+                        for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+
+                            if (recorrerVertice.getData() != null) {
+                                textField11.setText(recorrerVertice.getData().getPersonaPaciente().getNombre());
+                            }
+                            if (recorrerVertice.getDataD() != null) {
+                                textField12.setText(recorrerVertice.getDataD().getPersonaDoctor().getApellido());
+                            }
+                            if (recorrerVertice.getDataT() != null) {
+                                textField13.setText(recorrerVertice.getDataT().getDescripcionDelTratamiento());
+                            }
+                            textArea2.append("\n" + recorrerVertice.print(grafoNew.isWeighted()));
+
                         }
-                        if (recorrerVertice.getDataD() !=null){
-                            textField12.setText(recorrerVertice.getDataD().getPersonaDoctor().getApellido());
+
+                        obtenerID(textField14);
+                        if (!id1.equals(" ") && !id2.equals(" ")) {
+                            comboBox6.removeAllItems();
+                            llenarArregloComboBoxId(listaDeId, comboBox6);
+                        } else if (!id1.equals(" ")) {
+                            comboBox6.removeAllItems();
+                            comboBox6.addItem(listaDeId.get(0));
                         }
-                        if (recorrerVertice.getDataT() !=null){
-                            textField13.setText(recorrerVertice.getDataT().getDescripcionDelTratamiento());
-                        }
-                        textArea2.append( "\n"+ recorrerVertice.print(grafoNew.isWeighted()));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No existe una ficha de progreso para ese paciente");
+                        descativarInterfazVisualizarProgreso();
                     }
-                }
+
 
             }
         });
@@ -490,11 +527,11 @@ public class InterfazProyectoFinal extends JFrame{
 
                 int dia = Integer.parseInt(textFieldDiaN.getText());
                 int mes = Integer.parseInt(textFieldMesN.getText());
-
+                boolean isNewPaciente = validarCedulasPacientes(textFieldCedula.getText());
 
                 try {
 
-                    if ( dia <= 31 && mes <= 12 ) {
+                    if ( dia <= 31 && mes <= 12 && isNewPaciente && comboBoxGenero.getSelectedIndex() != 0 && comboBoxPrioridadPaciente.getSelectedIndex() != 0 && comboBoxSeguroMedico.getSelectedIndex() != 0) {
                         // Creo la nueva persona
                         Persona PersonaNueva = new Persona(
                                 textFieldNombre.getText(),
@@ -595,13 +632,14 @@ public class InterfazProyectoFinal extends JFrame{
                 try {
                     int prioridadPaciente;
                     boolean seguroMedico;
+                    boolean isNewPaciente = validarCedulasPacientes(cedulaModificada.getText());
 
                     BurbujaxNombre();
                     String nombrePacienteEliminar = JOptionPane.showInputDialog("Ingrese el nombre del paciente a modificar");
                     Paciente pacienteEncontrado = searchBinary(getPacientes(), nombrePacienteEliminar);
                     if (pacienteEncontrado != null) {
 
-                        if (prioridadModificado.getSelectedIndex() != 0 && seguroModificadoBox.getSelectedIndex() != 0 && generoModificado.getSelectedIndex() != 0) {
+                        if (prioridadModificado.getSelectedIndex() != 0 && isNewPaciente && seguroModificadoBox.getSelectedIndex() != 0 && generoModificado.getSelectedIndex() != 0) {
                             if (prioridadModificado.getSelectedIndex() == 1) {
                                 prioridadPaciente = 1; // 1 significa que es estándar
                             } else {
@@ -664,8 +702,9 @@ public class InterfazProyectoFinal extends JFrame{
                 try {
                     int dia = Integer.parseInt(diaFisio.getText());
                     int mes = Integer.parseInt(mesFisio.getText());
+                    boolean isNewPaciente = validarCedulasDoctores(textFieldCedula.getText());
 
-                    if ( generoFisio.getSelectedIndex() != 0 && dia <= 31 && mes <= 12 && !nombreFisio.getText().isEmpty() && !apellidoFIsio.getText().isEmpty() && !cedulaFisio.getText().isEmpty() && !usernameFisio.getText().isEmpty() && !passwordFisio.getText().isEmpty()) {
+                    if ( generoFisio.getSelectedIndex() != 0 && dia <= 31 && mes <= 12 && !nombreFisio.getText().isEmpty() && !apellidoFIsio.getText().isEmpty() && isNewPaciente && !cedulaFisio.getText().isEmpty() && !usernameFisio.getText().isEmpty() && !passwordFisio.getText().isEmpty()) {
                         Persona nuevaPersona = new Persona( nombreFisio.getText(),
                                                             apellidoFIsio.getText(),
                                                             cedulaFisio.getText(),
@@ -715,13 +754,14 @@ public class InterfazProyectoFinal extends JFrame{
 
                     int dia = Integer.parseInt(nuevoDiaFisio.getText());
                     int mes = Integer.parseInt(nuevoMesFisio.getText());
+                    boolean isNewPaciente = validarCedulasDoctores(textFieldCedula.getText());
 
                     BurbujaxNombreDoctores();
                     String nombreDoctorEliminar = JOptionPane.showInputDialog("Ingrese el nombre del doctor a modificar");
                     Doctor doctorEncontrado = searchBinaryDoctores(doctores, nombreDoctorEliminar);
                     if (doctorEncontrado != null) {
 
-                        if ( dia <= 31 && mes <= 12 && nuevoGeneroFisio.getSelectedIndex() != 0 && !nuevoNombreFisio.getText().isEmpty() && !nuevoApellidoFisio.getText().isEmpty() && !nuevaCedulaFisio.getText().isEmpty() && !nuevoUsernameFisio.getText().isEmpty() && !nuevaPasswordFisio.getText().isEmpty() && !nuevaEspecFisio.getText().isEmpty()) {
+                        if ( dia <= 31 && mes <= 12 && nuevoGeneroFisio.getSelectedIndex() != 0 && isNewPaciente && !nuevoNombreFisio.getText().isEmpty() && !nuevoApellidoFisio.getText().isEmpty() && !nuevaCedulaFisio.getText().isEmpty() && !nuevoUsernameFisio.getText().isEmpty() && !nuevaPasswordFisio.getText().isEmpty() && !nuevaEspecFisio.getText().isEmpty()) {
 
                             JOptionPane.showMessageDialog(null, "Se encontró al Doctor " + doctorEncontrado.getPersonaDoctor().getNombre() + ", el doctor será modificado!");
                             // Modifico el paciente de la lista
@@ -981,7 +1021,8 @@ public class InterfazProyectoFinal extends JFrame{
         CAMBIARTRATAMIENTOButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
+                Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+                //Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
                 recorrerGrafoConNombre.getVertexByValuePaciente(estadoDescripcionTratamiento(textField14)).getDataT().setDescripcionDelTratamiento(textField13.getText());
                 textArea2.setText("");
                 if (recorrerGrafoConNombre!=null) {
@@ -1054,7 +1095,7 @@ public class InterfazProyectoFinal extends JFrame{
 
                         if (p.getPersonaPaciente().getCedula().equals(textFieldImprimirPacientexCedula.getText())) {
 
-                            textAreaListaPacientes.append(p.toString());
+                            textAreaImprimirPacientexCedula.append(p.toString());
 
                         }
 
@@ -1230,6 +1271,108 @@ public class InterfazProyectoFinal extends JFrame{
         nuevoMesFisio.addKeyListener(listenerValidarNumeros);
         nuevoAnioFisio.addKeyListener(listenerValidarNumeros);
 
+        cambiarDoctorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BurbujaxNombreDoctores();
+                Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+                //Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
+                if (searchBinaryDoctores(getArregloBurbujaDoctores(),textField12.getText() )!= null) {
+                    BurbujaxNombreDoctores();
+                    recorrerGrafoConNombre.getVertexByValuePaciente(estadoDocotorTratamiento(textField14)).getDataD().setPersonaDoctor(searchBinaryDoctores(getArregloBurbujaDoctores(), textField12.getText()).getPersonaDoctor());
+                    textArea2.setText("");
+                    if (recorrerGrafoConNombre != null) {
+                        for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+
+                            if (recorrerVertice.getData() != null) {
+                                textField11.setText(recorrerVertice.getData().getPersonaPaciente().getNombre());
+                            }
+                            if (recorrerVertice.getDataD() != null) {
+                                textField12.setText(recorrerVertice.getDataD().getPersonaDoctor().getApellido());
+                            }
+                            if (recorrerVertice.getDataT() != null) {
+                                textField13.setText(recorrerVertice.getDataT().getDescripcionDelTratamiento());
+                            }
+                            textArea2.append("\n" + recorrerVertice.print(grafoNew.isWeighted()));
+                        }
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,"Ese paciente es invalido");
+                }
+            }
+        });
+        cambiarPersonaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BurbujaxNombre();
+                Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+                //Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,textField14.getText());
+                if (searchBinary(getPacientes(),textField11.getText() )!= null) {
+                    BurbujaxNombre();
+                    String nombreVerticeGrafo=estadoPacienteTratamiento(textField14);
+                    recorrerGrafoConNombre.getVertexByValuePaciente(nombreVerticeGrafo).getData().setPersonaPaciente(searchBinary(getPacientes(), textField11.getText()).getPersonaPaciente());
+                    textArea2.setText("");
+                    if (recorrerGrafoConNombre != null) {
+                        for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+
+                            if (recorrerVertice.getData() != null) {
+                                textField11.setText(recorrerVertice.getData().getPersonaPaciente().getNombre());
+                            }
+                            if (recorrerVertice.getDataD() != null) {
+                                textField12.setText(recorrerVertice.getDataD().getPersonaDoctor().getApellido());
+                            }
+                            if (recorrerVertice.getDataT() != null) {
+                                textField13.setText(recorrerVertice.getDataT().getDescripcionDelTratamiento());
+                            }
+                            textArea2.append("\n" + recorrerVertice.print(grafoNew.isWeighted()));
+                        }
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,"Ese paciente es invalido");
+                }
+            }
+        });
+        imprimirProgresoSegunIdButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                textArea2.setText("");
+                Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+                if (recorrerGrafoConNombre!=null) {
+                    for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+
+                        if (recorrerVertice.getData() !=null){
+                            textField11.setText(recorrerVertice.getData().getPersonaPaciente().getNombre());
+                        }
+                        if (recorrerVertice.getDataD() !=null){
+                            textField12.setText(recorrerVertice.getDataD().getPersonaDoctor().getApellido());
+                        }
+                        if (recorrerVertice.getDataT() !=null){
+                            textField13.setText(recorrerVertice.getDataT().getDescripcionDelTratamiento());
+                        }
+                        textArea2.append( "\n"+ recorrerVertice.print(grafoNew.isWeighted()));
+
+                    }
+                }
+
+
+            }
+        });
+        eliminarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+                if (recorrerGrafoConNombre!=null) {
+                    JOptionPane.showMessageDialog(null,"Se ha eliminado la ficha con el id"+comboBox6.getSelectedItem().toString());
+                    grafos.remove(recorrerGrafoConNombre);
+                    comboBox6.removeAllItems();
+                    descativarInterfazVisualizarProgreso();
+                }else{
+                    JOptionPane.showMessageDialog(null,"No se ha elimidao la ficha");
+                }
+            }
+        });
     }
 
     private void cerrarSesion() {
@@ -1398,7 +1541,8 @@ public class InterfazProyectoFinal extends JFrame{
         return null;
     }
     public String estadoTratamientoString(JTextField paciente){
-        Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,paciente.getText());
+        Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+        //Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,paciente.getText());
         if (recorrerGrafoConNombre!=null) {
             for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
                 if (recorrerVertice.getDataT() != null) {
@@ -1410,13 +1554,43 @@ public class InterfazProyectoFinal extends JFrame{
 
     }
     public String estadoDescripcionTratamiento(JTextField paciente){
-
-        Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,paciente.getText());
+        Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+        //Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,paciente.getText());
         String informacion="";
         if (recorrerGrafoConNombre!=null) {
             for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
                 if (recorrerVertice.getDataT() != null) {
                     informacion=recorrerVertice.getDataT().getDescripcionDelTratamiento();
+                        return informacion;
+                }
+            }
+        }
+        return informacion;
+
+    }
+    public String estadoDocotorTratamiento(JTextField paciente){
+        Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+        //Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,paciente.getText());
+        String informacion="";
+        if (recorrerGrafoConNombre!=null) {
+            for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+                if (recorrerVertice.getDataD() != null) {
+                    informacion=recorrerVertice.getDataD().getPersonaDoctor().getApellido();
+                        return informacion;
+                }
+            }
+        }
+        return informacion;
+
+    }
+    public String estadoPacienteTratamiento(JTextField paciente){
+        Grafo recorrerGrafoConNombre=grafoSegunId(textField14,comboBox6.getSelectedItem().toString());
+        //Grafo recorrerGrafoConNombre=buscarGrafoPorPaciente(grafos,paciente.getText());
+        String informacion="";
+        if (recorrerGrafoConNombre!=null) {
+            for (Vertice recorrerVertice : recorrerGrafoConNombre.getVertices()) {
+                if (recorrerVertice.getData() != null) {
+                    informacion=recorrerVertice.getData().getPersonaPaciente().getNombre();
                         return informacion;
                 }
             }
@@ -1431,6 +1605,51 @@ public class InterfazProyectoFinal extends JFrame{
             comboBoxHorasCitas.addItem(x);
             comboBoxCitaNuevaHora.addItem(x);
         }
+    }
+    public  void obtenerID (JTextField nombrePaciente) {
+        int compararI=20;
+        listaDeId=new ArrayList<>();
+        id1=" ";
+        id2=" ";
+        for (int i=0; i<grafos.size();i++){
+            if (grafos.get(i).getVertexByValuePaciente(nombrePaciente.getText()) != null && id1.equals(" ")) {
+                for (Vertice recorrerVertice : grafos.get(i).getVertices()) {
+                    if (recorrerVertice.getDataT() != null && id1.equals(" ")) {
+                        id1=String.valueOf(recorrerVertice.getDataT().getID());
+                        compararI=i;
+                    }
+                }
+
+            }if (compararI!=i && grafos.get(i).getVertexByValuePaciente(nombrePaciente.getText())!= null && !id1.equals(" ") && id2.equals(" ")){
+                for (Vertice recorrerVertice : grafos.get(i).getVertices()) {
+                    if (recorrerVertice.getDataT() != null) {
+                        id2=String.valueOf(recorrerVertice.getDataT().getID());
+                    }
+                }
+            }
+        }
+        listaDeId.add(id1);
+        listaDeId.add(id2);
+    }
+    private void llenarArregloComboBoxId(List<String> listaRecorrer, JComboBox comboBoxSetear){
+        for (String idRecorrer:listaRecorrer){
+            comboBoxSetear.addItem(idRecorrer);
+        }
+
+    }
+    private Grafo grafoSegunId(JTextField nombrePaciente,String id){
+        int idConvert= Integer.valueOf(id);
+        for (Grafo grafo : grafos) {
+            if (grafo.getVertexByValuePaciente(nombrePaciente.getText()) != null) {
+                for (Vertice recorrerVertice : grafo.getVertices()) {
+                    if (recorrerVertice.getDataT() != null && recorrerVertice.getDataT().getID() == idConvert) {
+                        return grafo;
+                    }
+                }
+            }
+        }
+        return null;
+
     }
 
     public void validacionLetras(java.awt.event.KeyEvent evt) {
@@ -1453,6 +1672,119 @@ public class InterfazProyectoFinal extends JFrame{
         }
 
     }
+    public void setEnableComboFalse(JComboBox comboBox){
+        comboBox.setEnabled(false);
+    }
+
+    public void setEnableComboTrue(JComboBox comboBox){
+        comboBox.setEnabled(true);
+    }
+    public void setEditableJtextFalse(JTextField jtextFalse){
+        jtextFalse.setEditable(false);
+    }
+
+    public void setEditableJtextTrue(JTextField jtextFalse){
+        jtextFalse.setEditable(true);
+    }
+    public void setEnableJtextFalse(JTextField jtextFalse){
+        jtextFalse.setEnabled(false);
+    }
+
+    public void setEnableJtextTrue(JTextField jtextFalse){
+        jtextFalse.setEnabled(true);
+    }
+    public void setEnableButtonFalse(JButton button){
+        button.setEnabled(false);
+    }
+
+    public void setEnableButtonTrue(JButton button){
+        button.setEnabled(true);
+    }
+
+    public void descativarInterfazIngresoProgreso(){
+        setEnableComboFalse(comboBox4);
+        setEditableJtextFalse(textField10);
+        setEnableJtextFalse(textField10);
+        setEnableButtonFalse(crearFichaDeProgresoButton);
+        enInicioCheckBox.setEnabled(false);
+        enProgresoCheckBox.setEnabled(false);
+        completadoCheckBox.setEnabled(false);
+    }
+
+    public void activarInterfazIngresoProgreso(){
+        setEnableComboTrue(comboBox4);
+        setEditableJtextTrue(textField10);
+        setEnableJtextTrue(textField10);
+        setEnableButtonTrue(crearFichaDeProgresoButton);
+        enInicioCheckBox.setEnabled(true);
+        enProgresoCheckBox.setEnabled(true);
+        completadoCheckBox.setEnabled(true);
+    }
+
+    public void descativarInterfazVisualizarProgreso(){
+        setEnableComboFalse(comboBox6);
+        comboBox6.removeAllItems();
+        setEnableComboFalse(comboBox5);
+        setEditableJtextFalse(textField11);
+        setEnableJtextFalse(textField11);
+        textField11.setText(" ");
+        setEditableJtextFalse(textField12);
+        setEnableJtextFalse(textField12);
+        textField12.setText(" ");
+        setEditableJtextFalse(textField13);
+        setEnableJtextFalse(textField13);
+        textField13.setText(" ");
+        setEnableButtonFalse(imprimirProgresoSegunIdButton);
+        setEnableButtonFalse(eliminarButton);
+        setEnableButtonFalse(cambiarPersonaButton);
+        setEnableButtonFalse(cambiarDoctorButton);
+        setEnableButtonFalse(CAMBIARTRATAMIENTOButton);
+        setEnableButtonFalse(CONFIRMARESTADOTRATAMIENTOButton);
+        textArea2.setText(" ");
+        textArea2.setEditable(false);
+    }
+
+    public void activarInterfazVisualizarProgreso(){
+        setEnableComboTrue(comboBox6);
+        setEnableComboTrue(comboBox5);
+        setEditableJtextTrue(textField11);
+        setEnableJtextTrue(textField11);
+        setEditableJtextTrue(textField12);
+        setEnableJtextTrue(textField12);
+        setEditableJtextTrue(textField13);
+        setEnableJtextTrue(textField13);
+        setEnableButtonTrue(imprimirProgresoSegunIdButton);
+        setEnableButtonTrue(eliminarButton);
+        setEnableButtonTrue(cambiarPersonaButton);
+        setEnableButtonTrue(cambiarDoctorButton);
+        setEnableButtonTrue(CAMBIARTRATAMIENTOButton);
+        setEnableButtonTrue(CONFIRMARESTADOTRATAMIENTOButton);
+    }
+    public void activarInterfazModificarFactura(){
+        setEnableComboTrue(comboBoxCantidaddeterapiasMo);
+        setEnableComboTrue(comboBoxFormaDepagoMo);
+        setEditableJtextTrue(textFieldDescripcionMo);
+        setEnableJtextTrue(textFieldDescripcionMo);
+        setEnableJtextTrue(textFieldValoraPagarMo);
+        setEditableJtextTrue(textFieldValoraPagarMo);
+        setEnableButtonTrue(ButtonModificar);
+        textAreaMostrarModificar.setEditable(false);
+    }
+    public void desactivarInterfazModificarFactura(){
+        setEnableComboFalse(comboBoxCantidaddeterapiasMo);
+        setEnableComboFalse(comboBoxFormaDepagoMo);
+        setEditableJtextFalse(textFieldDescripcionMo);
+        setEditableJtextFalse(textFieldUsuarioMo);
+        setEnableJtextFalse(textFieldUsuarioMo);
+        setEnableJtextFalse(textFieldDescripcionMo);
+        setEnableJtextFalse(textFieldValoraPagarMo);
+        setEditableJtextFalse(textFieldValoraPagarMo);
+        setEnableButtonTrue(ButtonModificar);
+        textAreaMostrarModificar.setEditable(false);
+    }
+
+
+
 
     public boolean validarCedulaEcuatoriana(String validarCedula) {
 
@@ -1498,5 +1830,38 @@ public class InterfazProyectoFinal extends JFrame{
 
         return estado;
     }
+
+    public boolean validarCedulasPacientes(String cedula) {
+
+        for (Paciente p : pacientes){
+
+            if (p.getPersonaPaciente().getCedula().equals(cedula)) {
+                JOptionPane.showMessageDialog(null,"Ya existe un paciente con la cédula ingresada!");
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    }
+
+    public boolean validarCedulasDoctores(String cedula) {
+
+        for (Doctor d : doctores){
+
+            if (d.getPersonaDoctor().getCedula().equals(cedula)) {
+                JOptionPane.showMessageDialog(null,"Ya existe un fisioterapeuta con la cédula ingresada!");
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    }
+
 
 }

@@ -99,6 +99,11 @@ public class Grafo {
                     return v;
                 }
             }
+            if (v.getDataD() != null) {
+                if (v.getDataD().getPersonaDoctor().getApellido().equals(value)) {
+                    return v;
+                }
+            }
             if (v.getDataT() != null) {
                 if (v.getDataT().getEstadoDelTratamiento().equals(value)) {
                     //v.getDataT().setDescripcionDelTratamiento("");

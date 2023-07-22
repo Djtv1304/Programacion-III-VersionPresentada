@@ -11,7 +11,7 @@ public class SystemFacturacion {
         facturasDiarias.add(factura);
     }
     public void modificarPacientedeFactura(Factura factura_Modificar_Paciente,Paciente pacienteaModificar){
-         factura_Modificar_Paciente.setPacienteFactura(pacienteaModificar);
+        factura_Modificar_Paciente.setPacienteFactura(pacienteaModificar);
     }
     public void modificarCantidadTerapiasFactura(Factura factura_Modificar_Terapias,int cantidadaModficar){
         factura_Modificar_Terapias.setCantidadTerapias(cantidadaModficar);
@@ -43,6 +43,18 @@ public class SystemFacturacion {
         for (int i = 0; i < n-1; i++) {
             for (int j = 0; j < n-i-1; j++) {
                 if (facturas.get(j).getFechaDiaActual().getDayOfMonth()>facturas.get(j+1).getFechaDiaActual().getDayOfMonth() && facturas.get(j).getFechaDiaActual().getMonthValue()>facturas.get(j+1).getFechaDiaActual().getMonthValue()) {
+                    Factura temp = facturas.get(j);
+                    facturas.set(j,facturas.get(j+1)) ;
+                    facturas.set(j+1,temp);
+                }
+            }
+        }
+    }
+    public void BurbujaxCorreo(){
+        int n = facturas.size();
+        for (int i = 0; i < n-1; i++) {
+            for (int j = 0; j < n-i-1; j++) {
+                if (facturas.get(j).getPacienteFactura().getPersonaPaciente().getUsername().compareTo(facturas.get(j+1).getPacienteFactura().getPersonaPaciente().getUsername()) >0 ) {
                     Factura temp = facturas.get(j);
                     facturas.set(j,facturas.get(j+1)) ;
                     facturas.set(j+1,temp);
